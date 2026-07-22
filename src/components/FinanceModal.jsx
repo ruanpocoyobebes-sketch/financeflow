@@ -1,6 +1,41 @@
 import { useEffect, useState } from "react";
 import { useFinance } from "../context/FinanceContext";
 
+const categoriasPorTipo = {
+  Receita: [
+    "Salário",
+    "Freelance",
+    "Vendas",
+    "Rendimentos",
+    "Presente",
+    "Reembolso",
+    "Outros",
+  ],
+
+  Despesa: [
+    "Alimentação",
+    "Transporte",
+    "Moradia",
+    "Saúde",
+    "Educação",
+    "Lazer",
+    "Compras",
+    "Contas",
+    "Assinaturas",
+    "Outros",
+  ],
+
+  Investimento: [
+    "Renda Fixa",
+    "Ações",
+    "Fundos",
+    "Criptomoedas",
+    "Reserva de Emergência",
+    "Previdência",
+    "Outros",
+  ],
+};
+
 function FinanceModal({
   aberto,
   fechar,
@@ -17,46 +52,102 @@ function FinanceModal({
 
   const [tipo, setTipo] = useState("Receita");
   const [descricao, setDescricao] = useState("");
+  const [categoria, setCategoria] = useState("Salário");
   const [valor, setValor] = useState("");
 
   useEffect(() => {
     if (transacaoEditando) {
-      setTipo(transacaoEditando.tipo);
-      setDescricao(transacaoEditando.descricao);
-      setValor(transacaoEditando.valor);
+      const tipoDaTransacao =
+        transacaoEditando.tipo || "Receita";
+
+      setTipo(tipoDaTransacao);
+      setDescricao(
+        transacaoEditando.descricao || ""
+      );
+      setValor(
+        transacaoEditando.valor || ""
+      );
+
+      setCategoria(
+        transacaoEditando.categoria ||
+          categoriasPorTipo[tipoDaTransacao]?.[0] ||
+          "Outros"
+      );
     } else {
-      setTipo("Receita");
-      setDescricao("");
-      setValor("");
+      limparFormulario();
     }
-  }, [transacaoEditando]);
+  }, [transacaoEditando, aberto]);
+
+  function limparFormulario() {
+    setTipo("Receita");
+    setDescricao("");
+    setCategoria("Salário");
+    setValor("");
+  }
+
+  function mudarTipo(novoTipo) {
+    setTipo(novoTipo);
+
+    const primeiraCategoria =
+      categoriasPorTipo[novoTipo]?.[0] ||
+      "Outros";
+
+    setCategoria(primeiraCategoria);
+  }
+
+  function fecharModal() {
+    limparFormulario();
+    fechar();
+  }
 
   if (!aberto) return null;
 
   function salvar() {
-    if (!descricao.trim()) {
+    const descricaoFormatada =
+      descricao.trim();
+
+    const valorNumerico =
+      Number(valor);
+
+    if (!descricaoFormatada) {
       alert("Digite uma descrição.");
       return;
     }
 
-    if (!valor || Number(valor) <= 0) {
+    if (!categoria) {
+      alert("Selecione uma categoria.");
+      return;
+    }
+
+    if (
+      !valor ||
+      Number.isNaN(valorNumerico) ||
+      valorNumerico <= 0
+    ) {
       alert("Digite um valor válido.");
       return;
     }
 
-    if (transacaoEditando) {
-      const dados = {
-        descricao,
-        valor: Number(valor),
-      };
+    const dados = {
+      descricao: descricaoFormatada,
+      categoria,
+      valor: valorNumerico,
+    };
 
+    if (transacaoEditando) {
       switch (transacaoEditando.tipo) {
         case "Receita":
-          editarReceita(transacaoEditando.id, dados);
+          editarReceita(
+            transacaoEditando.id,
+            dados
+          );
           break;
 
         case "Despesa":
-          editarDespesa(transacaoEditando.id, dados);
+          editarDespesa(
+            transacaoEditando.id,
+            dados
+          );
           break;
 
         case "Investimento":
@@ -67,145 +158,223 @@ function FinanceModal({
           break;
 
         default:
-          break;
+          alert(
+            "Tipo de transação inválido."
+          );
+          return;
       }
 
-      fechar();
+      fecharModal();
       return;
     }
 
     switch (tipo) {
       case "Receita":
         adicionarReceita(
-          descricao,
-          Number(valor)
+          descricaoFormatada,
+          valorNumerico,
+          categoria
         );
         break;
 
       case "Despesa":
         adicionarDespesa(
-          descricao,
-          Number(valor)
+          descricaoFormatada,
+          valorNumerico,
+          categoria
         );
         break;
 
       case "Investimento":
         adicionarInvestimento(
-          descricao,
-          Number(valor)
+          descricaoFormatada,
+          valorNumerico,
+          categoria
         );
         break;
 
       default:
-        break;
+        alert("Tipo de transação inválido.");
+        return;
     }
 
-    setDescricao("");
-    setValor("");
-    setTipo("Receita");
-
-    fechar();
+    fecharModal();
   }
 
   return (
     <div
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          fecharModal();
+        }
+      }}
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,.65)",
+        background: "rgba(0, 0, 0, 0.68)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        padding: 20,
         zIndex: 999,
       }}
     >
       <div
         style={{
-          width: 420,
+          width: "100%",
+          maxWidth: 420,
           background: "#1E293B",
           borderRadius: 14,
           padding: 24,
+          border: "1px solid #334155",
+          boxShadow:
+            "0 20px 50px rgba(0, 0, 0, 0.4)",
         }}
       >
         <h2
           style={{
             color: "white",
             marginTop: 0,
+            marginBottom: 6,
           }}
         >
           {transacaoEditando
-            ? "Editar Transação"
-            : "Nova Transação"}
+            ? "Editar transação"
+            : "Nova transação"}
         </h2>
+
+        <p
+          style={{
+            color: "#94A3B8",
+            marginTop: 0,
+            marginBottom: 18,
+            fontSize: 14,
+          }}
+        >
+          Informe os dados da movimentação.
+        </p>
+
+        <label style={label}>
+          Tipo
+        </label>
 
         <select
           value={tipo}
           disabled={!!transacaoEditando}
-          onChange={(e) =>
-            setTipo(e.target.value)
+          onChange={(event) =>
+            mudarTipo(event.target.value)
           }
-          style={input}
+          style={{
+            ...input,
+            opacity: transacaoEditando
+              ? 0.65
+              : 1,
+            cursor: transacaoEditando
+              ? "not-allowed"
+              : "pointer",
+          }}
         >
-          <option>Receita</option>
-          <option>Despesa</option>
-          <option>Investimento</option>
+          <option value="Receita">
+            Receita
+          </option>
+
+          <option value="Despesa">
+            Despesa
+          </option>
+
+          <option value="Investimento">
+            Investimento
+          </option>
         </select>
+
+        <label style={label}>
+          Descrição
+        </label>
 
         <input
           style={input}
-          placeholder="Descrição"
+          type="text"
+          placeholder="Ex.: Salário de julho"
           value={descricao}
-          onChange={(e) =>
-            setDescricao(e.target.value)
+          onChange={(event) =>
+            setDescricao(event.target.value)
           }
+          maxLength={60}
         />
+
+        <label style={label}>
+          Categoria
+        </label>
+
+        <select
+          value={categoria}
+          onChange={(event) =>
+            setCategoria(event.target.value)
+          }
+          style={{
+            ...input,
+            cursor: "pointer",
+          }}
+        >
+          {categoriasPorTipo[tipo].map(
+            (item) => (
+              <option
+                key={item}
+                value={item}
+              >
+                {item}
+              </option>
+            )
+          )}
+        </select>
+
+        <label style={label}>
+          Valor
+        </label>
 
         <input
           style={input}
           type="number"
-          placeholder="Valor"
+          placeholder="0,00"
           value={valor}
-          onChange={(e) =>
-            setValor(e.target.value)
+          min="0"
+          step="0.01"
+          onChange={(event) =>
+            setValor(event.target.value)
           }
-        />        <div
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              salvar();
+            }
+          }}
+        />
+
+        <div
           style={{
             display: "flex",
             gap: 10,
-            marginTop: 20,
+            marginTop: 22,
           }}
         >
           <button
+            type="button"
             onClick={salvar}
             style={{
-              flex: 1,
-              padding: 12,
+              ...button,
               background: "#22C55E",
-              color: "white",
-              border: "none",
-              borderRadius: 8,
-              cursor: "pointer",
-              fontWeight: "bold",
-              fontSize: 15,
             }}
           >
             {transacaoEditando
-              ? "Salvar Alterações"
+              ? "Salvar alterações"
               : "Adicionar"}
           </button>
 
           <button
-            onClick={fechar}
+            type="button"
+            onClick={fecharModal}
             style={{
-              flex: 1,
-              padding: 12,
+              ...button,
               background: "#EF4444",
-              color: "white",
-              border: "none",
-              borderRadius: 8,
-              cursor: "pointer",
-              fontWeight: "bold",
-              fontSize: 15,
             }}
           >
             Cancelar
@@ -216,10 +385,18 @@ function FinanceModal({
   );
 }
 
+const label = {
+  display: "block",
+  color: "#CBD5E1",
+  fontSize: 14,
+  fontWeight: 600,
+  marginTop: 14,
+  marginBottom: 6,
+};
+
 const input = {
   width: "100%",
   padding: "12px",
-  marginTop: "12px",
   borderRadius: "8px",
   border: "1px solid #334155",
   background: "#0F172A",
@@ -227,6 +404,17 @@ const input = {
   fontSize: "15px",
   outline: "none",
   boxSizing: "border-box",
+};
+
+const button = {
+  flex: 1,
+  padding: 12,
+  color: "white",
+  border: "none",
+  borderRadius: 8,
+  cursor: "pointer",
+  fontWeight: "bold",
+  fontSize: 15,
 };
 
 export default FinanceModal;

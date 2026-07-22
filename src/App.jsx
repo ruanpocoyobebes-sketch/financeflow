@@ -1,8 +1,6 @@
 import "./index.css";
 import { Routes, Route } from "react-router-dom";
 
-import { useSettings } from "./context/SettingsContext";
-
 import Sidebar from "./components/Sidebar";
 
 import Dashboard from "./pages/Dashboard";
@@ -14,17 +12,13 @@ import Relatorios from "./pages/Relatorios";
 import Configuracoes from "./pages/Configuracoes";
 
 function App() {
-  const { settings } = useSettings();
-
   return (
     <div
-      data-theme={settings.tema}
       style={{
         display: "flex",
         minHeight: "100vh",
-        background: "var(--bg-primary)",
-        color: "var(--text-primary)",
-        transition: "background 0.25s ease, color 0.25s ease",
+        background: "#0F172A",
+        color: "white",
       }}
     >
       <Sidebar />

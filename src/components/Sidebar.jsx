@@ -31,7 +31,7 @@ function Sidebar() {
           color: "var(--accent)",
         }}
       >
-        💰 FinanceFlow
+        💰 mahafinance
       </h2>
 
       <nav
@@ -73,7 +73,7 @@ function Sidebar() {
           fontSize: "14px",
         }}
       >
-        FinanceFlow v1.0
+      mahafinance v1.0
       </div>
     </aside>
   );

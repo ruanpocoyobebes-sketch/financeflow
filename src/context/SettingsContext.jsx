@@ -9,7 +9,6 @@ const SettingsContext = createContext(null);
 
 const configuracoesIniciais = {
   nome: "",
-  tema: "dark",
   moeda: "BRL",
   mostrarCentavos: true,
   formatoData: "dd/MM/yyyy",
@@ -19,13 +18,23 @@ export function SettingsProvider({ children }) {
   const [settings, setSettings] = useState(() => {
     try {
       const configuracoesSalvas = localStorage.getItem(
-        "financeflow-settings"
+        "mahafinance-settings"
       );
 
       if (configuracoesSalvas) {
+        const configuracoesConvertidas = JSON.parse(
+          configuracoesSalvas
+        );
+
         return {
           ...configuracoesIniciais,
-          ...JSON.parse(configuracoesSalvas),
+          nome: configuracoesConvertidas.nome || "",
+          moeda: configuracoesConvertidas.moeda || "BRL",
+          mostrarCentavos:
+            configuracoesConvertidas.mostrarCentavos ?? true,
+          formatoData:
+            configuracoesConvertidas.formatoData ||
+            "dd/MM/yyyy",
         };
       }
 
@@ -41,18 +50,18 @@ export function SettingsProvider({ children }) {
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem(
-        "financeflow-settings",
-        JSON.stringify(settings)
-      );
-    } catch (erro) {
-      console.error(
-        "Erro ao salvar as configurações:",
-        erro
-      );
-    }
+    localStorage.setItem(
+      "mahafinance-settings",
+      JSON.stringify(settings)
+    );
   }, [settings]);
+
+  useEffect(() => {
+    document.documentElement.removeAttribute("data-theme");
+    document.documentElement.style.background = "#0F172A";
+    document.body.style.background = "#0F172A";
+    document.body.style.color = "#FFFFFF";
+  }, []);
 
   function atualizarSetting(chave, valor) {
     setSettings((configuracoesAnteriores) => ({

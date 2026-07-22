@@ -18,7 +18,7 @@ export function FinanceProvider({ children }) {
 
   useEffect(() => {
     const dadosSalvos =
-      localStorage.getItem("financeflow");
+      localStorage.getItem("mahafinance");
 
     if (dadosSalvos) {
       try {
@@ -51,7 +51,7 @@ export function FinanceProvider({ children }) {
         );
       } catch (erro) {
         console.error(
-          "Erro ao carregar os dados do FinanceFlow:",
+          "Erro ao carregar os dados do mahafinance:",
           erro
         );
       }
@@ -64,7 +64,7 @@ export function FinanceProvider({ children }) {
     if (!dadosCarregados) return;
 
     localStorage.setItem(
-      "financeflow",
+      "mahafinance",
       JSON.stringify({
         receitas,
         despesas,

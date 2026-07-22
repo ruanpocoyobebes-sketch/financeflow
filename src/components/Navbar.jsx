@@ -15,7 +15,7 @@ function Navbar() {
             margin: 0,
           }}
         >
-          FinanceFlow
+          mahafinance
         </h2>
 
         <p

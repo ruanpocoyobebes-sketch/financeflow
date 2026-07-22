@@ -1,31 +1,22 @@
-import { useSettings } from "../context/SettingsContext";
-
 function Card({ titulo, valor, cor }) {
-  const { settings } = useSettings();
-
   const formatarMoeda = (valorRecebido) =>
     Number(valorRecebido).toLocaleString("pt-BR", {
       style: "currency",
-      currency: settings.moeda || "BRL",
-      minimumFractionDigits: settings.mostrarCentavos ? 2 : 0,
-      maximumFractionDigits: settings.mostrarCentavos ? 2 : 0,
+      currency: "BRL",
     });
 
   return (
     <div
       style={{
-        background: "var(--bg-card)",
+        background: "#1E293B",
         borderRadius: "14px",
         padding: "22px",
-        border: "1px solid var(--border-color)",
-        boxShadow: "var(--shadow)",
-        transition:
-          "background 0.25s ease, border-color 0.25s ease, transform 0.2s ease",
+        boxShadow: "0 6px 15px rgba(0,0,0,.25)",
       }}
     >
       <p
         style={{
-          color: "var(--text-muted)",
+          color: "#94A3B8",
           margin: 0,
           marginBottom: 12,
           fontSize: 15,
