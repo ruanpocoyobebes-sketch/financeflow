@@ -63,7 +63,7 @@ function Dashboard() {
   );
 
   const totalObjetivosMetas = metas.reduce(
-    (total, meta) => total + Number(meta.valorObjetivo || 0),
+    (total, meta) => total + Number(meta.valorAlvo || 0),
     0
   );
 
