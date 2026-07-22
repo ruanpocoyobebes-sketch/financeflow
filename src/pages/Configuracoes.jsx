@@ -20,7 +20,7 @@ function Configuracoes() {
           marginBottom: 30,
         }}
       >
-        Personalize o FinanceFlow.
+        Personalize o mahafinance.
       </p>
 
       <section
@@ -141,7 +141,7 @@ function Configuracoes() {
         </h2>
 
         <p style={{ color: "#CBD5E1" }}>
-          <strong>FinanceFlow</strong>
+          <strong>mahafinance</strong>
         </p>
 
         <p style={{ color: "#94A3B8" }}>
