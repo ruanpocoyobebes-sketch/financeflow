@@ -57,21 +57,22 @@ function Sidebar() {
       onMouseEnter={() => setExpandida(true)}
       onMouseLeave={() => setExpandida(false)}
       style={{
-        width: expandida ? "250px" : "82px",
-        minWidth: expandida ? "250px" : "82px",
+        width: expandida ? 250 : 76,
+        minWidth: expandida ? 250 : 76,
         height: "100vh",
         position: "sticky",
         top: 0,
         background: "var(--bg-secondary)",
         color: "var(--text-primary)",
-        padding: expandida ? "30px 20px" : "30px 12px",
+        padding: expandida ? "24px 18px" : "24px 10px",
         display: "flex",
         flexDirection: "column",
-        borderRight: "1px solid var(--border-color)",
+        boxSizing: "border-box",
+        overflow: "hidden",
+        borderRight: "2px solid #334155",
+        boxShadow: "8px 0 20px rgba(0, 0, 0, 0.18)",
         transition:
           "width 0.25s ease, min-width 0.25s ease, padding 0.25s ease",
-        overflow: "hidden",
-        boxSizing: "border-box",
         zIndex: 100,
       }}
     >
@@ -81,9 +82,8 @@ function Sidebar() {
           alignItems: "center",
           justifyContent: expandida ? "flex-start" : "center",
           gap: 10,
-          minHeight: 42,
-          marginBottom: 40,
-          paddingLeft: expandida ? 4 : 0,
+          minHeight: 44,
+          marginBottom: 30,
           whiteSpace: "nowrap",
         }}
       >
@@ -100,12 +100,15 @@ function Sidebar() {
           style={{
             margin: 0,
             color: "var(--accent)",
+            fontSize: 22,
             opacity: expandida ? 1 : 0,
+            width: expandida ? "auto" : 0,
+            overflow: "hidden",
             transform: expandida
               ? "translateX(0)"
-              : "translateX(-8px)",
+              : "translateX(-10px)",
             transition:
-              "opacity 0.18s ease, transform 0.18s ease",
+              "opacity 0.18s ease, transform 0.18s ease, width 0.25s ease",
             pointerEvents: "none",
           }}
         >
@@ -117,7 +120,7 @@ function Sidebar() {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 12,
+          gap: 10,
         }}
       >
         {menu.map((item) => (
@@ -136,26 +139,27 @@ function Sidebar() {
               gap: 14,
               textDecoration: "none",
               color: isActive
-                ? "#ffffff"
+                ? "#FFFFFF"
                 : "var(--text-primary)",
               padding: expandida
-                ? "12px 16px"
-                : "12px 10px",
+                ? "12px 14px"
+                : "12px 8px",
               borderRadius: 10,
               background: isActive
                 ? "var(--accent)"
                 : "transparent",
-              transition:
-                "background 0.2s ease, padding 0.25s ease",
-              fontWeight: isActive ? "bold" : "500",
+              fontWeight: isActive ? 700 : 500,
               whiteSpace: "nowrap",
               overflow: "hidden",
+              transition:
+                "background 0.2s ease, padding 0.25s ease",
             })}
           >
             <span
               style={{
                 width: 22,
                 minWidth: 22,
+                height: 22,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -169,11 +173,13 @@ function Sidebar() {
             <span
               style={{
                 opacity: expandida ? 1 : 0,
+                width: expandida ? "auto" : 0,
+                overflow: "hidden",
                 transform: expandida
                   ? "translateX(0)"
-                  : "translateX(-8px)",
+                  : "translateX(-10px)",
                 transition:
-                  "opacity 0.18s ease, transform 0.18s ease",
+                  "opacity 0.18s ease, transform 0.18s ease, width 0.25s ease",
                 pointerEvents: "none",
               }}
             >
@@ -186,13 +192,14 @@ function Sidebar() {
       <div
         style={{
           marginTop: "auto",
-          minHeight: 22,
           textAlign: "center",
           color: "var(--text-muted)",
-          fontSize: 14,
+          fontSize: 13,
           whiteSpace: "nowrap",
           opacity: expandida ? 1 : 0,
-          transition: "opacity 0.18s ease",
+          height: expandida ? 20 : 0,
+          overflow: "hidden",
+          transition: "opacity 0.18s ease, height 0.25s ease",
         }}
       >
         mahafinance v1.0
