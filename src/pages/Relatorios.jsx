@@ -201,15 +201,13 @@ function Relatorios() {
     totalInvestimentos -
     totalMetas;
 
-  const valorMovimentado =
-    totalReceitas +
-    totalDespesas +
-    totalInvestimentos;
-
-  const mediaMovimentacoes =
-    transacoesFiltradas.length > 0
-      ? valorMovimentado / transacoesFiltradas.length
-      : 0;
+  /*
+    Patrimônio total: tudo que ainda pertence ao usuário.
+    Investimentos e metas não reduzem o patrimônio, pois apenas
+    representam dinheiro transferido para outro destino.
+  */
+  const patrimonioTotal =
+    totalReceitas - totalDespesas;
 
   function encontrarMaior(lista) {
     if (lista.length === 0) return null;
@@ -706,15 +704,17 @@ function Relatorios() {
           />
 
           <Estatistica
-            titulo="Valor movimentado"
-            valor={formatarMoeda(valorMovimentado)}
+            titulo="Patrimônio total"
+            valor={formatarMoeda(patrimonioTotal)}
+            detalhe="Entradas menos despesas"
             icone={<FaCoins />}
           />
 
           <Estatistica
-            titulo="Média por movimentação"
-            valor={formatarMoeda(mediaMovimentacoes)}
-            icone={<FaChartLine />}
+            titulo="Saldo disponível"
+            valor={formatarMoeda(saldoDisponivel)}
+            detalhe="Após investimentos e metas"
+            icone={<FaWallet />}
           />
 
           <Estatistica
