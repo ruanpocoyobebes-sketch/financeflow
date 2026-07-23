@@ -7,6 +7,8 @@ import {
   Legend,
 } from "recharts";
 
+import { useSettings } from "../context/SettingsContext";
+
 const COLORS = {
   "Saldo disponível": "#22C55E",
   Investimentos: "#3B82F6",
@@ -19,6 +21,8 @@ function Chart({
   investimentos = 0,
   metas = 0,
 }) {
+  const { formatarMoeda } = useSettings();
+
   const totalReceitas = Math.max(
     Number(receitas) || 0,
     0
@@ -39,24 +43,12 @@ function Chart({
     0
   );
 
-  /*
-    Dinheiro disponível agora.
-
-    Investimentos e metas saem da conta principal,
-    mas continuam fazendo parte do patrimônio.
-  */
   const saldoDisponivel =
     totalReceitas -
     totalDespesas -
     totalInvestimentos -
     totalMetas;
 
-  /*
-    Patrimônio real.
-
-    Investimentos e metas não são despesas.
-    Apenas a despesa reduz o patrimônio.
-  */
   const patrimonioTotal =
     totalReceitas - totalDespesas;
 
@@ -79,16 +71,6 @@ function Chart({
       value: totalMetas,
     },
   ].filter((item) => item.value > 0);
-
-  function formatar(valor) {
-    return Number(valor || 0).toLocaleString(
-      "pt-BR",
-      {
-        style: "currency",
-        currency: "BRL",
-      }
-    );
-  }
 
   function renderLabel({ percent }) {
     if (!percent || percent < 0.04) {
@@ -175,7 +157,7 @@ function Chart({
               fontSize: 17,
             }}
           >
-            {formatar(saldoDisponivel)}
+            {formatarMoeda(saldoDisponivel)}
           </strong>
         </div>
       </div>
@@ -218,7 +200,7 @@ function Chart({
 
               <Tooltip
                 formatter={(value, name) => [
-                  formatar(value),
+                  formatarMoeda(value),
                   name,
                 ]}
                 contentStyle={{
@@ -282,10 +264,9 @@ function Chart({
             textAlign: "center",
           }}
         >
-          As saídas ultrapassaram o dinheiro
-          disponível em{" "}
+          As saídas ultrapassaram o dinheiro disponível em{" "}
           <strong>
-            {formatar(
+            {formatarMoeda(
               Math.abs(saldoDisponivel)
             )}
           </strong>
@@ -330,7 +311,7 @@ function Chart({
               marginBottom: 0,
             }}
           >
-            {formatar(patrimonioTotal)}
+            {formatarMoeda(patrimonioTotal)}
           </h2>
         </div>
 
@@ -358,7 +339,7 @@ function Chart({
               marginBottom: 0,
             }}
           >
-            {formatar(totalInvestimentos)}
+            {formatarMoeda(totalInvestimentos)}
           </h2>
         </div>
 
@@ -386,7 +367,7 @@ function Chart({
               marginBottom: 0,
             }}
           >
-            {formatar(totalMetas)}
+            {formatarMoeda(totalMetas)}
           </h2>
         </div>
       </div>

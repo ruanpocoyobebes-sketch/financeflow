@@ -1,9 +1,7 @@
+import { useSettings } from "../context/SettingsContext";
+
 function Card({ titulo, valor, cor }) {
-  const formatarMoeda = (valorRecebido) =>
-    Number(valorRecebido).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
+  const { formatarMoeda } = useSettings();
 
   return (
     <div

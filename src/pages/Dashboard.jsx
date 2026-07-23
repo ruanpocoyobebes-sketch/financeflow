@@ -18,7 +18,7 @@ function Dashboard() {
   const [dataFinal, setDataFinal] = useState("");
 
   const { transacoes, metas } = useFinance();
-  const { settings } = useSettings();
+  const { settings, formatarMoeda } = useSettings();
 
   const transacoesFiltradas = transacoes.filter((item) => {
     if (!dataInicial && !dataFinal) return true;
@@ -102,15 +102,6 @@ function Dashboard() {
   const maiorCategoriaDespesa = Object.entries(
     despesasPorCategoria
   ).sort((a, b) => b[1] - a[1])[0];
-
-  function formatarMoeda(valor) {
-    return Number(valor || 0).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: settings.moeda || "BRL",
-      minimumFractionDigits: settings.mostrarCentavos ? 2 : 0,
-      maximumFractionDigits: settings.mostrarCentavos ? 2 : 0,
-    });
-  }
 
   function abrirNovaTransacao() {
     setTransacaoEditando(null);

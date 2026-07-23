@@ -1,5 +1,6 @@
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { useFinance } from "../context/FinanceContext";
+import { useSettings } from "../context/SettingsContext";
 
 function TransactionList({
   transacoes,
@@ -12,6 +13,8 @@ function TransactionList({
     removerDespesa,
     removerInvestimento,
   } = useFinance();
+
+  const { formatarMoeda } = useSettings();
 
   function converterData(data) {
     if (!data) return null;
@@ -42,7 +45,9 @@ function TransactionList({
       }
 
       if (dataInicial) {
-        const inicio = new Date(`${dataInicial}T00:00:00`);
+        const inicio = new Date(
+          `${dataInicial}T00:00:00`
+        );
 
         if (dataTransacao < inicio) {
           return false;
@@ -50,7 +55,9 @@ function TransactionList({
       }
 
       if (dataFinal) {
-        const fim = new Date(`${dataFinal}T23:59:59`);
+        const fim = new Date(
+          `${dataFinal}T23:59:59`
+        );
 
         if (dataTransacao > fim) {
           return false;
@@ -60,13 +67,6 @@ function TransactionList({
       return true;
     }
   );
-
-  function formatar(valor) {
-    return Number(valor).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  }
 
   function excluir(item) {
     const confirmou = window.confirm(
@@ -297,7 +297,7 @@ function TransactionList({
                     }}
                   >
                     {item.tipo === "Receita" ? "+" : "-"}{" "}
-                    {formatar(item.valor)}
+                    {formatarMoeda(item.valor)}
                   </td>
 
                   <td style={td}>
