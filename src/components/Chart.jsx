@@ -8,8 +8,7 @@ import {
 } from "recharts";
 
 const COLORS = {
-  Receitas: "#22C55E",
-  Despesas: "#EF4444",
+  "Saldo disponível": "#22C55E",
   Investimentos: "#3B82F6",
   Metas: "#A855F7",
 };
@@ -20,47 +19,81 @@ function Chart({
   investimentos = 0,
   metas = 0,
 }) {
-  const valores = {
-    receitas: Number(receitas) || 0,
-    despesas: Number(despesas) || 0,
-    investimentos: Number(investimentos) || 0,
-    metas: Number(metas) || 0,
-  };
+  const totalReceitas = Math.max(
+    Number(receitas) || 0,
+    0
+  );
 
-  const total =
-    valores.receitas +
-    valores.despesas +
-    valores.investimentos +
-    valores.metas;
+  const totalDespesas = Math.max(
+    Number(despesas) || 0,
+    0
+  );
+
+  const totalInvestimentos = Math.max(
+    Number(investimentos) || 0,
+    0
+  );
+
+  const totalMetas = Math.max(
+    Number(metas) || 0,
+    0
+  );
+
+  /*
+    Dinheiro disponível agora.
+
+    Investimentos e metas saem da conta principal,
+    mas continuam fazendo parte do patrimônio.
+  */
+  const saldoDisponivel =
+    totalReceitas -
+    totalDespesas -
+    totalInvestimentos -
+    totalMetas;
+
+  /*
+    Patrimônio real.
+
+    Investimentos e metas não são despesas.
+    Apenas a despesa reduz o patrimônio.
+  */
+  const patrimonioTotal =
+    totalReceitas - totalDespesas;
+
+  const saldoExibido = Math.max(
+    saldoDisponivel,
+    0
+  );
 
   const data = [
     {
-      name: "Receitas",
-      value: valores.receitas,
-    },
-    {
-      name: "Despesas",
-      value: valores.despesas,
+      name: "Saldo disponível",
+      value: saldoExibido,
     },
     {
       name: "Investimentos",
-      value: valores.investimentos,
+      value: totalInvestimentos,
     },
     {
       name: "Metas",
-      value: valores.metas,
+      value: totalMetas,
     },
   ].filter((item) => item.value > 0);
 
   function formatar(valor) {
-    return Number(valor).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
+    return Number(valor || 0).toLocaleString(
+      "pt-BR",
+      {
+        style: "currency",
+        currency: "BRL",
+      }
+    );
   }
 
   function renderLabel({ percent }) {
-    if (!percent) return "";
+    if (!percent || percent < 0.04) {
+      return "";
+    }
 
     return `${(percent * 100).toFixed(0)}%`;
   }
@@ -72,38 +105,93 @@ function Chart({
         borderRadius: 16,
         padding: 25,
         marginTop: 30,
-        boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+        boxShadow:
+          "0 10px 30px rgba(0,0,0,0.25)",
         border: "1px solid #334155",
       }}
     >
-      <h2
+      <div
         style={{
-          color: "white",
-          marginTop: 0,
-          marginBottom: 5,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: 20,
+          flexWrap: "wrap",
         }}
       >
-        Resumo Financeiro
-      </h2>
+        <div>
+          <h2
+            style={{
+              color: "white",
+              marginTop: 0,
+              marginBottom: 5,
+            }}
+          >
+            Distribuição do patrimônio
+          </h2>
 
-      <p
-        style={{
-          color: "#94A3B8",
-          marginTop: 0,
-          marginBottom: 20,
-        }}
-      >
-        Distribuição das movimentações e valores guardados
-      </p>
+          <p
+            style={{
+              color: "#94A3B8",
+              marginTop: 0,
+              marginBottom: 0,
+            }}
+          >
+            Veja onde seu dinheiro está atualmente.
+          </p>
+        </div>
+
+        <div
+          style={{
+            background:
+              saldoDisponivel >= 0
+                ? "rgba(34, 197, 94, 0.12)"
+                : "rgba(239, 68, 68, 0.12)",
+            border:
+              saldoDisponivel >= 0
+                ? "1px solid rgba(34, 197, 94, 0.35)"
+                : "1px solid rgba(239, 68, 68, 0.35)",
+            borderRadius: 12,
+            padding: "10px 14px",
+          }}
+        >
+          <span
+            style={{
+              display: "block",
+              color: "#94A3B8",
+              fontSize: 12,
+              marginBottom: 4,
+            }}
+          >
+            Saldo disponível
+          </span>
+
+          <strong
+            style={{
+              color:
+                saldoDisponivel >= 0
+                  ? "#22C55E"
+                  : "#EF4444",
+              fontSize: 17,
+            }}
+          >
+            {formatar(saldoDisponivel)}
+          </strong>
+        </div>
+      </div>
 
       <div
         style={{
           width: "100%",
           height: 340,
+          marginTop: 15,
         }}
       >
         {data.length > 0 ? (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+          >
             <PieChart>
               <Pie
                 data={data}
@@ -135,7 +223,8 @@ function Chart({
                 ]}
                 contentStyle={{
                   background: "#0F172A",
-                  border: "1px solid #334155",
+                  border:
+                    "1px solid #334155",
                   borderRadius: 10,
                   color: "white",
                 }}
@@ -171,39 +260,135 @@ function Chart({
               justifyContent: "center",
               alignItems: "center",
               color: "#94A3B8",
+              textAlign: "center",
             }}
           >
-            Nenhuma movimentação encontrada.
+            Nenhum patrimônio registrado no período.
           </div>
         )}
       </div>
 
+      {saldoDisponivel < 0 && (
+        <div
+          style={{
+            background:
+              "rgba(239, 68, 68, 0.1)",
+            border:
+              "1px solid rgba(239, 68, 68, 0.35)",
+            borderRadius: 12,
+            padding: 14,
+            marginBottom: 20,
+            color: "#FCA5A5",
+            textAlign: "center",
+          }}
+        >
+          As saídas ultrapassaram o dinheiro
+          disponível em{" "}
+          <strong>
+            {formatar(
+              Math.abs(saldoDisponivel)
+            )}
+          </strong>
+          .
+        </div>
+      )}
+
       <div
         style={{
-          textAlign: "center",
-          marginTop: 10,
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: 15,
           paddingTop: 20,
           borderTop: "1px solid #334155",
         }}
       >
-        <span
+        <div
           style={{
-            color: "#94A3B8",
-            fontSize: 14,
+            textAlign: "center",
+            background: "#0F172A",
+            borderRadius: 12,
+            padding: 16,
           }}
         >
-          Total movimentado
-        </span>
+          <span
+            style={{
+              color: "#94A3B8",
+              fontSize: 13,
+            }}
+          >
+            Patrimônio total
+          </span>
 
-        <h2
+          <h2
+            style={{
+              color:
+                patrimonioTotal >= 0
+                  ? "#FFFFFF"
+                  : "#EF4444",
+              marginTop: 6,
+              marginBottom: 0,
+            }}
+          >
+            {formatar(patrimonioTotal)}
+          </h2>
+        </div>
+
+        <div
           style={{
-            color: "white",
-            marginTop: 5,
-            marginBottom: 0,
+            textAlign: "center",
+            background: "#0F172A",
+            borderRadius: 12,
+            padding: 16,
           }}
         >
-          {formatar(total)}
-        </h2>
+          <span
+            style={{
+              color: "#94A3B8",
+              fontSize: 13,
+            }}
+          >
+            Total investido
+          </span>
+
+          <h2
+            style={{
+              color: "#3B82F6",
+              marginTop: 6,
+              marginBottom: 0,
+            }}
+          >
+            {formatar(totalInvestimentos)}
+          </h2>
+        </div>
+
+        <div
+          style={{
+            textAlign: "center",
+            background: "#0F172A",
+            borderRadius: 12,
+            padding: 16,
+          }}
+        >
+          <span
+            style={{
+              color: "#94A3B8",
+              fontSize: 13,
+            }}
+          >
+            Guardado em metas
+          </span>
+
+          <h2
+            style={{
+              color: "#A855F7",
+              marginTop: 6,
+              marginBottom: 0,
+            }}
+          >
+            {formatar(totalMetas)}
+          </h2>
+        </div>
       </div>
     </div>
   );
