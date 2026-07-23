@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -52,10 +52,29 @@ const menu = [
 function Sidebar() {
   const [expandida, setExpandida] = useState(false);
 
+  const temporizadorAbrir = useRef(null);
+  const temporizadorFechar = useRef(null);
+
+  function abrirSidebar() {
+    clearTimeout(temporizadorFechar.current);
+
+    temporizadorAbrir.current = setTimeout(() => {
+      setExpandida(true);
+    }, 140);
+  }
+
+  function fecharSidebar() {
+    clearTimeout(temporizadorAbrir.current);
+
+    temporizadorFechar.current = setTimeout(() => {
+      setExpandida(false);
+    }, 180);
+  }
+
   return (
     <aside
-      onMouseEnter={() => setExpandida(true)}
-      onMouseLeave={() => setExpandida(false)}
+      onMouseEnter={abrirSidebar}
+      onMouseLeave={fecharSidebar}
       style={{
         width: expandida ? 250 : 76,
         minWidth: expandida ? 250 : 76,
@@ -69,10 +88,12 @@ function Sidebar() {
         flexDirection: "column",
         boxSizing: "border-box",
         overflow: "hidden",
-        borderRight: "2px solid #334155",
-        boxShadow: "8px 0 20px rgba(0, 0, 0, 0.18)",
+        borderRight: "1px solid #334155",
+        boxShadow: expandida
+          ? "10px 0 40px rgba(0,0,0,0.35)"
+          : "5px 0 15px rgba(0,0,0,0.15)",
         transition:
-          "width 0.25s ease, min-width 0.25s ease, padding 0.25s ease",
+          "width 0.5s cubic-bezier(.22,1,.36,1), min-width 0.5s cubic-bezier(.22,1,.36,1), padding 0.5s cubic-bezier(.22,1,.36,1), box-shadow 0.45s ease",
         zIndex: 100,
       }}
     >
@@ -85,12 +106,19 @@ function Sidebar() {
           minHeight: 44,
           marginBottom: 30,
           whiteSpace: "nowrap",
+          transition:
+            "justify-content 0.5s cubic-bezier(.22,1,.36,1)",
         }}
       >
         <span
           style={{
             fontSize: 24,
             flexShrink: 0,
+            transform: expandida
+              ? "scale(1)"
+              : "scale(0.95)",
+            transition:
+              "transform 0.35s ease",
           }}
         >
           💰
@@ -102,13 +130,14 @@ function Sidebar() {
             color: "var(--accent)",
             fontSize: 22,
             opacity: expandida ? 1 : 0,
-            width: expandida ? "auto" : 0,
+            width: expandida ? 160 : 0,
             overflow: "hidden",
             transform: expandida
               ? "translateX(0)"
-              : "translateX(-10px)",
-            transition:
-              "opacity 0.18s ease, transform 0.18s ease, width 0.25s ease",
+              : "translateX(-18px)",
+            transition: expandida
+              ? "opacity 0.25s ease 0.18s, transform 0.35s ease 0.12s, width 0.5s cubic-bezier(.22,1,.36,1)"
+              : "opacity 0.15s ease, transform 0.25s ease, width 0.5s cubic-bezier(.22,1,.36,1)",
             pointerEvents: "none",
           }}
         >
@@ -152,7 +181,7 @@ function Sidebar() {
               whiteSpace: "nowrap",
               overflow: "hidden",
               transition:
-                "background 0.2s ease, padding 0.25s ease",
+                "background 0.25s ease, color 0.25s ease, padding 0.5s cubic-bezier(.22,1,.36,1), transform 0.25s ease",
             })}
           >
             <span
@@ -165,6 +194,11 @@ function Sidebar() {
                 justifyContent: "center",
                 fontSize: 18,
                 flexShrink: 0,
+                transform: expandida
+                  ? "scale(1)"
+                  : "scale(0.95)",
+                transition:
+                  "transform 0.35s ease",
               }}
             >
               {item.icone}
@@ -173,13 +207,14 @@ function Sidebar() {
             <span
               style={{
                 opacity: expandida ? 1 : 0,
-                width: expandida ? "auto" : 0,
+                width: expandida ? 150 : 0,
                 overflow: "hidden",
                 transform: expandida
                   ? "translateX(0)"
-                  : "translateX(-10px)",
-                transition:
-                  "opacity 0.18s ease, transform 0.18s ease, width 0.25s ease",
+                  : "translateX(-18px)",
+                transition: expandida
+                  ? "opacity 0.25s ease 0.18s, transform 0.35s ease 0.12s, width 0.5s cubic-bezier(.22,1,.36,1)"
+                  : "opacity 0.15s ease, transform 0.25s ease, width 0.5s cubic-bezier(.22,1,.36,1)",
                 pointerEvents: "none",
               }}
             >
@@ -199,7 +234,12 @@ function Sidebar() {
           opacity: expandida ? 1 : 0,
           height: expandida ? 20 : 0,
           overflow: "hidden",
-          transition: "opacity 0.18s ease, height 0.25s ease",
+          transform: expandida
+            ? "translateY(0)"
+            : "translateY(8px)",
+          transition: expandida
+            ? "opacity 0.25s ease 0.22s, height 0.5s cubic-bezier(.22,1,.36,1), transform 0.35s ease 0.16s"
+            : "opacity 0.15s ease, height 0.35s ease, transform 0.25s ease",
         }}
       >
         mahafinance v1.0
