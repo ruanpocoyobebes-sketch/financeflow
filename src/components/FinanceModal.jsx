@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFinance } from "../context/FinanceContext";
+import { useSettings } from "../context/SettingsContext";
 
 const categoriasPorTipo = {
   Receita: [
@@ -50,6 +51,8 @@ function FinanceModal({
     editarInvestimento,
   } = useFinance();
 
+  const { cores } = useSettings();
+
   const [tipo, setTipo] = useState("Receita");
   const [descricao, setDescricao] = useState("");
   const [categoria, setCategoria] = useState("Salário");
@@ -57,21 +60,22 @@ function FinanceModal({
 
   useEffect(() => {
     if (transacaoEditando) {
-      const tipoDaTransacao =
+      const tipoAtual =
         transacaoEditando.tipo || "Receita";
 
-      setTipo(tipoDaTransacao);
+      setTipo(tipoAtual);
+
       setDescricao(
         transacaoEditando.descricao || ""
-      );
-      setValor(
-        transacaoEditando.valor || ""
       );
 
       setCategoria(
         transacaoEditando.categoria ||
-          categoriasPorTipo[tipoDaTransacao]?.[0] ||
-          "Outros"
+          categoriasPorTipo[tipoAtual][0]
+      );
+
+      setValor(
+        transacaoEditando.valor || ""
       );
     } else {
       limparFormulario();
@@ -88,117 +92,80 @@ function FinanceModal({
   function mudarTipo(novoTipo) {
     setTipo(novoTipo);
 
-    const primeiraCategoria =
-      categoriasPorTipo[novoTipo]?.[0] ||
-      "Outros";
-
-    setCategoria(primeiraCategoria);
+    setCategoria(
+      categoriasPorTipo[novoTipo][0]
+    );
   }
 
   function fecharModal() {
     limparFormulario();
     fechar();
   }
+    function salvar() {
+    const descricaoLimpa = descricao.trim();
 
-  if (!aberto) return null;
-
-  function salvar() {
-    const descricaoFormatada =
-      descricao.trim();
-
-    const valorNumerico =
-      Number(valor);
-
-    if (!descricaoFormatada) {
+    if (!descricaoLimpa) {
       alert("Digite uma descrição.");
       return;
     }
 
-    if (!categoria) {
-      alert("Selecione uma categoria.");
-      return;
-    }
+    const valorNumero = Number(valor);
 
-    if (
-      !valor ||
-      Number.isNaN(valorNumerico) ||
-      valorNumerico <= 0
-    ) {
+    if (!valorNumero || valorNumero <= 0) {
       alert("Digite um valor válido.");
       return;
     }
 
     const dados = {
-      descricao: descricaoFormatada,
+      descricao: descricaoLimpa,
       categoria,
-      valor: valorNumerico,
+      valor: valorNumero,
+      tipo,
     };
 
     if (transacaoEditando) {
-      switch (transacaoEditando.tipo) {
+      dados.id = transacaoEditando.id;
+
+      switch (tipo) {
         case "Receita":
-          editarReceita(
-            transacaoEditando.id,
-            dados
-          );
+          editarReceita(dados);
           break;
 
         case "Despesa":
-          editarDespesa(
-            transacaoEditando.id,
-            dados
-          );
+          editarDespesa(dados);
           break;
 
         case "Investimento":
-          editarInvestimento(
-            transacaoEditando.id,
-            dados
-          );
+          editarInvestimento(dados);
           break;
 
         default:
-          alert(
-            "Tipo de transação inválido."
-          );
-          return;
+          break;
       }
+    } else {
+      switch (tipo) {
+        case "Receita":
+          adicionarReceita(dados);
+          break;
 
-      fecharModal();
-      return;
-    }
+        case "Despesa":
+          adicionarDespesa(dados);
+          break;
 
-    switch (tipo) {
-      case "Receita":
-        adicionarReceita(
-          descricaoFormatada,
-          valorNumerico,
-          categoria
-        );
-        break;
+        case "Investimento":
+          adicionarInvestimento(dados);
+          break;
 
-      case "Despesa":
-        adicionarDespesa(
-          descricaoFormatada,
-          valorNumerico,
-          categoria
-        );
-        break;
-
-      case "Investimento":
-        adicionarInvestimento(
-          descricaoFormatada,
-          valorNumerico,
-          categoria
-        );
-        break;
-
-      default:
-        alert("Tipo de transação inválido.");
-        return;
+        default:
+          break;
+      }
     }
 
     fecharModal();
+  }
+
+  if (!aberto) {
+    return null;
   }
 
   return (
@@ -211,157 +178,165 @@ function FinanceModal({
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0, 0, 0, 0.68)",
+        background: "rgba(15,23,42,.72)",
+        backdropFilter: "blur(12px)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: 20,
-        zIndex: 999,
+        padding: 24,
+        zIndex: 9999,
       }}
     >
       <div
         style={{
           width: "100%",
-          maxWidth: 420,
-          background: "#1E293B",
-          borderRadius: 14,
-          padding: 24,
-          border: "1px solid #334155",
-          boxShadow:
-            "0 20px 50px rgba(0, 0, 0, 0.4)",
+          maxWidth: 500,
+          background: cores.painel,
+          border: `1px solid ${cores.borda}`,
+          borderRadius: 22,
+          padding: 30,
+          boxShadow: cores.sombra,
         }}
       >
-        <h2
-          style={{
-            color: "white",
-            marginTop: 0,
-            marginBottom: 6,
-          }}
-        >
-          {transacaoEditando
-            ? "Editar transação"
-            : "Nova transação"}
-        </h2>
+        <div style={{ marginBottom: 25 }}>
+          <h2
+            style={{
+              margin: 0,
+              color: cores.texto,
+              fontSize: 30,
+              fontWeight: 700,
+            }}
+          >
+            {transacaoEditando
+              ? "Editar transação"
+              : "Nova transação"}
+          </h2>
 
-        <p
-          style={{
-            color: "#94A3B8",
-            marginTop: 0,
-            marginBottom: 18,
-            fontSize: 14,
-          }}
-        >
-          Informe os dados da movimentação.
-        </p>
-
-        <label style={label}>
+          <p
+            style={{
+              marginTop: 8,
+              marginBottom: 0,
+              color: cores.textoSecundario,
+              fontSize: 14,
+            }}
+          >
+            Cadastre uma movimentação financeira.
+          </p>
+        </div>
+                <label style={label(cores)}>
           Tipo
         </label>
 
         <select
           value={tipo}
           disabled={!!transacaoEditando}
-          onChange={(event) =>
-            mudarTipo(event.target.value)
+          onChange={(e) =>
+            mudarTipo(e.target.value)
           }
           style={{
-            ...input,
-            opacity: transacaoEditando
-              ? 0.65
-              : 1,
+            ...input(cores),
+            opacity: transacaoEditando ? 0.65 : 1,
             cursor: transacaoEditando
               ? "not-allowed"
               : "pointer",
           }}
         >
           <option value="Receita">
-            Receita
+            💰 Receita
           </option>
 
           <option value="Despesa">
-            Despesa
+            💸 Despesa
           </option>
 
           <option value="Investimento">
-            Investimento
+            📈 Investimento
           </option>
         </select>
 
-        <label style={label}>
+        <label style={label(cores)}>
           Descrição
         </label>
 
         <input
-          style={input}
           type="text"
-          placeholder="Ex.: Salário de julho"
           value={descricao}
-          onChange={(event) =>
-            setDescricao(event.target.value)
-          }
+          placeholder="Ex.: Salário de Julho"
           maxLength={60}
+          style={input(cores)}
+          onChange={(e) =>
+            setDescricao(e.target.value)
+          }
         />
 
-        <label style={label}>
+        <label style={label(cores)}>
           Categoria
         </label>
 
         <select
           value={categoria}
-          onChange={(event) =>
-            setCategoria(event.target.value)
-          }
           style={{
-            ...input,
+            ...input(cores),
             cursor: "pointer",
           }}
+          onChange={(e) =>
+            setCategoria(e.target.value)
+          }
         >
-          {categoriasPorTipo[tipo].map(
-            (item) => (
-              <option
-                key={item}
-                value={item}
-              >
-                {item}
-              </option>
-            )
-          )}
+          {categoriasPorTipo[tipo].map((item) => (
+            <option
+              key={item}
+              value={item}
+            >
+              {item}
+            </option>
+          ))}
         </select>
 
-        <label style={label}>
+        <label style={label(cores)}>
           Valor
         </label>
 
         <input
-          style={input}
           type="number"
-          placeholder="0,00"
           value={valor}
           min="0"
           step="0.01"
-          onChange={(event) =>
-            setValor(event.target.value)
+          placeholder="0,00"
+          style={input(cores)}
+          onChange={(e) =>
+            setValor(e.target.value)
           }
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
               salvar();
             }
           }}
         />
-
-        <div
+                <div
           style={{
             display: "flex",
-            gap: 10,
-            marginTop: 22,
+            gap: 14,
+            marginTop: 30,
           }}
         >
           <button
             type="button"
             onClick={salvar}
             style={{
-              ...button,
-              background: "#22C55E",
+              ...button("#22C55E"),
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform =
+                "translateY(-2px)";
+              e.currentTarget.style.filter =
+                "brightness(1.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform =
+                "translateY(0)";
+              e.currentTarget.style.filter =
+                "brightness(1)";
             }}
           >
             {transacaoEditando
@@ -373,8 +348,19 @@ function FinanceModal({
             type="button"
             onClick={fecharModal}
             style={{
-              ...button,
-              background: "#EF4444",
+              ...button("#EF4444"),
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform =
+                "translateY(-2px)";
+              e.currentTarget.style.filter =
+                "brightness(1.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform =
+                "translateY(0)";
+              e.currentTarget.style.filter =
+                "brightness(1)";
             }}
           >
             Cancelar
@@ -384,37 +370,39 @@ function FinanceModal({
     </div>
   );
 }
-
-const label = {
+const label = (cores) => ({
   display: "block",
-  color: "#CBD5E1",
-  fontSize: 14,
+  marginTop: 18,
+  marginBottom: 8,
+  color: cores.texto,
   fontWeight: 600,
-  marginTop: 14,
-  marginBottom: 6,
-};
+  fontSize: 14,
+});
 
-const input = {
+const input = (cores) => ({
   width: "100%",
-  padding: "12px",
-  borderRadius: "8px",
-  border: "1px solid #334155",
-  background: "#0F172A",
-  color: "white",
-  fontSize: "15px",
+  padding: "14px 16px",
+  borderRadius: 14,
+  border: `1px solid ${cores.borda}`,
+  background: cores.fundoSecundario,
+  color: cores.texto,
+  fontSize: 15,
   outline: "none",
   boxSizing: "border-box",
-};
+  transition: "0.25s",
+});
 
-const button = {
+const button = (cor) => ({
   flex: 1,
-  padding: 12,
-  color: "white",
+  padding: "14px",
+  background: cor,
+  color: "#fff",
   border: "none",
-  borderRadius: 8,
+  borderRadius: 14,
   cursor: "pointer",
-  fontWeight: "bold",
+  fontWeight: 700,
   fontSize: 15,
-};
-
+  transition: "0.25s",
+  boxShadow: "0 10px 20px rgba(0,0,0,.18)",
+});
 export default FinanceModal;

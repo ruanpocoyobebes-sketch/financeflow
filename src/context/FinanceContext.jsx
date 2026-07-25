@@ -5,9 +5,24 @@ import {
   useState,
 } from "react";
 
+import { useAuth } from "./AuthContext";
+
 const FinanceContext = createContext();
+const CHAVE_DADOS_LEGADOS = "mahafinance";
+const CHAVE_DONO_DADOS_LEGADOS =
+  "mahafinance-dados-dono-legado";
 
 export function FinanceProvider({ children }) {
+  const {
+    usuario,
+    carregando: carregandoAutenticacao,
+  } = useAuth();
+
+  const usuarioId = usuario?.id || null;
+  const chaveDados = usuarioId
+    ? `${CHAVE_DADOS_LEGADOS}:${usuarioId}`
+    : null;
+
   const [receitas, setReceitas] = useState([]);
   const [despesas, setDespesas] = useState([]);
   const [investimentos, setInvestimentos] = useState([]);
@@ -18,6 +33,8 @@ export function FinanceProvider({ children }) {
 
   const [dadosCarregados, setDadosCarregados] =
     useState(false);
+  const [donoDadosCarregados, setDonoDadosCarregados] =
+    useState(null);
 
   function categoriaPadrao(tipo) {
     switch (tipo) {
@@ -140,8 +157,50 @@ export function FinanceProvider({ children }) {
   }
 
   useEffect(() => {
-    const dadosSalvos =
-      localStorage.getItem("mahafinance");
+    if (carregandoAutenticacao) {
+      return;
+    }
+
+    setDadosCarregados(false);
+    setDonoDadosCarregados(null);
+    setReceitas([]);
+    setDespesas([]);
+    setInvestimentos([]);
+    setMetas([]);
+    setMovimentacoesMeta([]);
+
+    if (!usuarioId || !chaveDados) {
+      return;
+    }
+
+    let dadosSalvos =
+      localStorage.getItem(chaveDados);
+
+    if (!dadosSalvos) {
+      const donoDadosLegados =
+        localStorage.getItem(
+          CHAVE_DONO_DADOS_LEGADOS
+        );
+
+      const dadosLegados =
+        localStorage.getItem(
+          CHAVE_DADOS_LEGADOS
+        );
+
+      const podeMigrarDadosLegados =
+        dadosLegados &&
+        (!donoDadosLegados ||
+          donoDadosLegados === usuarioId);
+
+      if (podeMigrarDadosLegados) {
+        dadosSalvos = dadosLegados;
+
+        localStorage.setItem(
+          CHAVE_DONO_DADOS_LEGADOS,
+          usuarioId
+        );
+      }
+    }
 
     if (dadosSalvos) {
       try {
@@ -188,14 +247,25 @@ export function FinanceProvider({ children }) {
       }
     }
 
+    setDonoDadosCarregados(usuarioId);
     setDadosCarregados(true);
-  }, []);
+  }, [
+    carregandoAutenticacao,
+    chaveDados,
+    usuarioId,
+  ]);
 
   useEffect(() => {
-    if (!dadosCarregados) return;
+    if (
+      !dadosCarregados ||
+      !chaveDados ||
+      donoDadosCarregados !== usuarioId
+    ) {
+      return;
+    }
 
     localStorage.setItem(
-      "mahafinance",
+      chaveDados,
       JSON.stringify({
         receitas,
         despesas,
@@ -211,6 +281,9 @@ export function FinanceProvider({ children }) {
     metas,
     movimentacoesMeta,
     dadosCarregados,
+    donoDadosCarregados,
+    chaveDados,
+    usuarioId,
   ]);
 
   function criarTransacao(

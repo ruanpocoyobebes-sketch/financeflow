@@ -18,7 +18,11 @@ function Dashboard() {
   const [dataFinal, setDataFinal] = useState("");
 
   const { transacoes, metas } = useFinance();
-  const { settings, formatarMoeda } = useSettings();
+  const {
+    settings,
+    formatarMoeda,
+    cores,
+  } = useSettings();
 
   const transacoesFiltradas = transacoes.filter((item) => {
     if (!dataInicial && !dataFinal) return true;
@@ -268,7 +272,7 @@ function Dashboard() {
   const insights = criarInsights();
 
   return (
-    <div>
+    <div style={{ color: cores.texto }}>
       <Navbar />
 
       <div
@@ -313,7 +317,7 @@ function Dashboard() {
           <div>
             <h1
               style={{
-                color: "white",
+                color: cores.texto,
                 margin: 0,
                 fontSize: 30,
               }}
@@ -324,7 +328,7 @@ function Dashboard() {
 
             <p
               style={{
-                color: "#94A3B8",
+                color: cores.textoSecundario,
                 marginTop: 8,
                 marginBottom: 0,
                 textTransform: "capitalize",
@@ -335,7 +339,7 @@ function Dashboard() {
 
             <p
               style={{
-                color: "#64748B",
+                color: cores.textoSuave,
                 marginTop: 6,
                 marginBottom: 0,
               }}
@@ -379,11 +383,11 @@ function Dashboard() {
           gap: 20,
         }}
       >
-        <Card
-          titulo="Saldo disponível"
-          valor={saldoFiltrado}
-          cor={saldoFiltrado >= 0 ? "#22C55E" : "#EF4444"}
-        />
+       <Card
+    titulo="Saldo disponível"
+    valor={saldoFiltrado}
+    cor={saldoFiltrado >= 0 ? "#22C55E" : "#EF4444"}
+/>
 
         <Card
           titulo="Receitas"
@@ -412,10 +416,11 @@ function Dashboard() {
             <section
         style={{
           marginTop: 30,
-          background: "#111827",
-          border: "1px solid #1F2937",
+          background: cores.painel,
+          border: `1px solid ${cores.borda}`,
           borderRadius: 16,
           padding: 24,
+          boxShadow: cores.sombra,
         }}
       >
         <div
@@ -431,7 +436,7 @@ function Dashboard() {
           <div>
             <h2
               style={{
-                color: "white",
+                color: cores.texto,
                 margin: 0,
                 marginBottom: 7,
               }}
@@ -441,7 +446,7 @@ function Dashboard() {
 
             <p
               style={{
-                color: "#94A3B8",
+                color: cores.textoSecundario,
                 margin: 0,
               }}
             >
@@ -451,12 +456,12 @@ function Dashboard() {
 
           <div
             style={{
-              background: "#1E293B",
-              color: "#CBD5E1",
+              background: cores.fundoSecundario,
+              color: cores.textoSecundario,
               padding: "9px 13px",
               borderRadius: 999,
               fontSize: 13,
-              border: "1px solid #334155",
+              border: `1px solid ${cores.borda}`,
             }}
           >
             {transacoesFiltradas.length} movimentações analisadas
@@ -475,7 +480,7 @@ function Dashboard() {
             <div
               key={`${insight.titulo}-${indice}`}
               style={{
-                background: "#1E293B",
+                background: cores.painelHover,
                 borderRadius: 14,
                 padding: 18,
                 border: `1px solid ${insight.cor}55`,
@@ -514,7 +519,7 @@ function Dashboard() {
 
                 <p
                   style={{
-                    color: "#CBD5E1",
+                    color: cores.texto,
                     margin: 0,
                     lineHeight: 1.5,
                     fontSize: 14,
@@ -532,10 +537,11 @@ function Dashboard() {
         <section
           style={{
             marginTop: 30,
-            background: "#1E293B",
+            background: cores.painel,
             borderRadius: 16,
             padding: 24,
-            border: "1px solid #334155",
+            border: `1px solid ${cores.borda}`,
+            boxShadow: cores.sombra,
           }}
         >
           <div
@@ -551,7 +557,7 @@ function Dashboard() {
             <div>
               <h2
                 style={{
-                  color: "white",
+                  color: cores.texto,
                   margin: 0,
                   marginBottom: 6,
                 }}
@@ -561,7 +567,7 @@ function Dashboard() {
 
               <p
                 style={{
-                  color: "#94A3B8",
+                  color: cores.textoSecundario,
                   margin: 0,
                 }}
               >
@@ -584,7 +590,7 @@ function Dashboard() {
             style={{
               width: "100%",
               height: 12,
-              background: "#0F172A",
+              background: cores.fundoSecundario,
               borderRadius: 999,
               overflow: "hidden",
             }}

@@ -6,77 +6,115 @@ import {
   useState,
 } from "react";
 
+import { useAuth } from "./AuthContext";
+
 const SettingsContext = createContext(null);
 
-const CHAVE_CONFIGURACOES =
-  "mahafinance-settings";
+const CHAVE_CONFIGURACOES = "mahafinance-settings";
+const CHAVE_DONO_CONFIGURACOES =
+  "mahafinance-settings-dono-legado";
+const CHAVE_COTACOES = "mahafinance-cotacoes";
 
-const CHAVE_COTACOES =
-  "mahafinance-cotacoes";
-
-const TEMPO_CACHE_COTACOES =
-  6 * 60 * 60 * 1000;
+const TEMPO_CACHE_COTACOES = 6 * 60 * 60 * 1000;
 
 const configuracoesIniciais = {
   nome: "",
   moeda: "BRL",
+  tema: "escuro",
   mostrarCentavos: true,
   formatoData: "dd/MM/yyyy",
 };
+
+function obterConfiguracoesSalvas(chave) {
+  try {
+    const salvo = localStorage.getItem(chave);
+
+    if (!salvo) {
+      return null;
+    }
+
+    return {
+      ...configuracoesIniciais,
+      ...JSON.parse(salvo),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function criarConfiguracoesIniciais(usuario) {
+  const nome =
+    usuario?.user_metadata?.nome?.trim() ||
+    usuario?.user_metadata?.full_name?.trim() ||
+    usuario?.email?.split("@")[0] ||
+    "";
+
+  return {
+    ...configuracoesIniciais,
+    nome,
+  };
+}
 
 const cotacoesIniciais = {
   BRL: 1,
   USD: 1,
   EUR: 1,
+  CNY: 1,
 };
 
-export function SettingsProvider({
-  children,
-}) {
-  const [settings, setSettings] =
-    useState(() => {
-      try {
-        const configuracoesSalvas =
-          localStorage.getItem(
-            CHAVE_CONFIGURACOES
-          );
+const temas = {
+  escuro: {
+    fundo: "#0F172A",
+    fundoSecundario: "#111827",
+    painel: "#1E293B",
+    painelHover: "#263449",
+    borda: "#334155",
+    texto: "#F8FAFC",
+    textoSecundario: "#94A3B8",
+    textoSuave: "#64748B",
+    input: "#0F172A",
+    sombra: "0 12px 35px rgba(0,0,0,.18)",
+  },
 
-        if (!configuracoesSalvas) {
-          return configuracoesIniciais;
-        }
+  claro: {
+    fundo: "#F1F5F9",
+    fundoSecundario: "#E2E8F0",
+    painel: "#FFFFFF",
+    painelHover: "#F8FAFC",
+    borda: "#CBD5E1",
+    texto: "#0F172A",
+    textoSecundario: "#475569",
+    textoSuave: "#64748B",
+    input: "#FFFFFF",
+    sombra: "0 12px 35px rgba(15,23,42,.08)",
+  },
+};
 
-        const configuracoesConvertidas =
-          JSON.parse(configuracoesSalvas);
+export function SettingsProvider({ children }) {
+  const {
+    usuario,
+    carregando: carregandoAutenticacao,
+  } = useAuth();
 
-        return {
-          ...configuracoesIniciais,
+  const identidadeConfiguracoes =
+    usuario?.id || "publico";
 
-          nome:
-            configuracoesConvertidas.nome ||
-            "",
+  const chaveConfiguracoes =
+    usuario?.id
+      ? `${CHAVE_CONFIGURACOES}:${usuario.id}`
+      : CHAVE_CONFIGURACOES;
 
-          moeda:
-            configuracoesConvertidas.moeda ||
-            "BRL",
+  const [settings, setSettings] = useState(
+    () =>
+      obterConfiguracoesSalvas(
+        CHAVE_CONFIGURACOES
+      ) || criarConfiguracoesIniciais(null)
+  );
 
-          mostrarCentavos:
-            configuracoesConvertidas
-              .mostrarCentavos ?? true,
-
-          formatoData:
-            configuracoesConvertidas
-              .formatoData ||
-            "dd/MM/yyyy",
-        };
-      } catch (erro) {
-        console.error(
-          "Erro ao carregar as configurações:",
-          erro
-        );
-
-        return configuracoesIniciais;
-      }
-    });
+  const [
+    donoConfiguracoesCarregadas,
+    setDonoConfiguracoesCarregadas,
+  ] = useState("publico");
 
   const [cotacoes, setCotacoes] =
     useState(cotacoesIniciais);
@@ -87,30 +125,159 @@ export function SettingsProvider({
   const [erroCotacoes, setErroCotacoes] =
     useState("");
 
-  const [ultimaAtualizacaoCotacoes, setUltimaAtualizacaoCotacoes] =
-    useState(null);
+  const [
+    ultimaAtualizacaoCotacoes,
+    setUltimaAtualizacaoCotacoes,
+  ] = useState(null);
+
+  const cores =
+    temas[settings.tema] || temas.escuro;
+
+  const temaEscuro =
+    settings.tema === "escuro";
 
   useEffect(() => {
+    if (
+      carregandoAutenticacao ||
+      donoConfiguracoesCarregadas ===
+        identidadeConfiguracoes
+    ) {
+      return;
+    }
+
+    let configuracoesSalvas =
+      obterConfiguracoesSalvas(chaveConfiguracoes);
+
+    if (usuario?.id && !configuracoesSalvas) {
+      const donoConfiguracoesLegadas =
+        localStorage.getItem(
+          CHAVE_DONO_CONFIGURACOES
+        );
+
+      const configuracoesLegadas =
+        obterConfiguracoesSalvas(
+          CHAVE_CONFIGURACOES
+        );
+
+      const podeMigrarConfiguracoesLegadas =
+        configuracoesLegadas &&
+        (!donoConfiguracoesLegadas ||
+          donoConfiguracoesLegadas === usuario.id);
+
+      if (podeMigrarConfiguracoesLegadas) {
+        configuracoesSalvas =
+          configuracoesLegadas;
+
+        localStorage.setItem(
+          CHAVE_DONO_CONFIGURACOES,
+          usuario.id
+        );
+      }
+    }
+
+    setSettings(
+      configuracoesSalvas ||
+        criarConfiguracoesIniciais(usuario)
+    );
+
+    setDonoConfiguracoesCarregadas(
+      identidadeConfiguracoes
+    );
+  }, [
+    carregandoAutenticacao,
+    chaveConfiguracoes,
+    donoConfiguracoesCarregadas,
+    identidadeConfiguracoes,
+    usuario,
+  ]);
+
+  useEffect(() => {
+    if (
+      carregandoAutenticacao ||
+      donoConfiguracoesCarregadas !==
+        identidadeConfiguracoes
+    ) {
+      return;
+    }
+
     localStorage.setItem(
-      CHAVE_CONFIGURACOES,
+      chaveConfiguracoes,
       JSON.stringify(settings)
     );
-  }, [settings]);
+  }, [
+    carregandoAutenticacao,
+    chaveConfiguracoes,
+    donoConfiguracoesCarregadas,
+    identidadeConfiguracoes,
+    settings,
+  ]);
 
   useEffect(() => {
-    document.documentElement.removeAttribute(
-      "data-theme"
+    const raiz = document.documentElement;
+
+    raiz.dataset.theme =
+      temaEscuro ? "dark" : "light";
+
+    raiz.style.setProperty(
+      "--bg-primary",
+      cores.fundo
     );
 
-    document.documentElement.style.background =
-      "#0F172A";
+    raiz.style.setProperty(
+      "--bg-secondary",
+      cores.fundoSecundario
+    );
 
-    document.body.style.background =
-      "#0F172A";
+    raiz.style.setProperty(
+      "--panel-bg",
+      cores.painel
+    );
 
-    document.body.style.color =
-      "#FFFFFF";
-  }, []);
+    raiz.style.setProperty(
+      "--panel-hover",
+      cores.painelHover
+    );
+
+    raiz.style.setProperty(
+      "--border-color",
+      cores.borda
+    );
+
+    raiz.style.setProperty(
+      "--text-primary",
+      cores.texto
+    );
+
+    raiz.style.setProperty(
+      "--text-secondary",
+      cores.textoSecundario
+    );
+
+    raiz.style.setProperty(
+      "--text-muted",
+      cores.textoSuave
+    );
+
+    raiz.style.setProperty(
+      "--input-bg",
+      cores.input
+    );
+
+    raiz.style.setProperty(
+      "--app-shadow",
+      cores.sombra
+    );
+
+    raiz.style.background = cores.fundo;
+
+    document.body.style.background = cores.fundo;
+    document.body.style.color = cores.texto;
+
+    document.body.style.margin = "0";
+
+    raiz.style.colorScheme =
+      temaEscuro ? "dark" : "light";
+  }, [cores, temaEscuro]);
 
   useEffect(() => {
     carregarCotacoes();
@@ -118,56 +285,16 @@ export function SettingsProvider({
 
   function obterCotacoesSalvas() {
     try {
-      const dadosSalvos =
-        localStorage.getItem(
-          CHAVE_COTACOES
-        );
-
-      if (!dadosSalvos) {
-        return null;
-      }
-
-      const dadosConvertidos =
-        JSON.parse(dadosSalvos);
-
-      const cotacoesSalvas =
-        dadosConvertidos.cotacoes;
-
-      const atualizadoEm =
-        Number(
-          dadosConvertidos.atualizadoEm
-        );
-
-      if (
-        !cotacoesSalvas ||
-        !atualizadoEm
-      ) {
-        return null;
-      }
-
-      return {
-        cotacoes: {
-          BRL: 1,
-
-          USD:
-            Number(
-              cotacoesSalvas.USD
-            ) || 1,
-
-          EUR:
-            Number(
-              cotacoesSalvas.EUR
-            ) || 1,
-        },
-
-        atualizadoEm,
-      };
-    } catch (erro) {
-      console.error(
-        "Erro ao ler cotações salvas:",
-        erro
+      const salvo = localStorage.getItem(
+        CHAVE_COTACOES
       );
 
+      if (!salvo) return null;
+
+      const dados = JSON.parse(salvo);
+
+      return dados;
+    } catch {
       return null;
     }
   }
@@ -185,61 +312,50 @@ export function SettingsProvider({
     );
   }
 
-  async function buscarTaxa(
-    moedaDestino
-  ) {
+  // ========= NOVA API =========
+
+  async function buscarTaxa(moeda) {
     const resposta = await fetch(
-      `https://api.frankfurter.dev/v2/rate/BRL/${moedaDestino}`
+      `https://api.frankfurter.app/latest?from=BRL&to=${moeda}`
     );
 
     if (!resposta.ok) {
       throw new Error(
-        `Não foi possível buscar a cotação BRL/${moedaDestino}.`
+        `Erro ao buscar ${moeda}`
       );
     }
 
     const dados = await resposta.json();
 
-    const taxa = Number(dados.rate);
+    const taxa = Number(
+      dados.rates?.[moeda]
+    );
 
-    if (
-      !Number.isFinite(taxa) ||
-      taxa <= 0
-    ) {
+    if (!taxa || taxa <= 0) {
       throw new Error(
-        `A cotação BRL/${moedaDestino} recebida é inválida.`
+        `Cotação inválida para ${moeda}`
       );
     }
 
     return taxa;
   }
-
-  async function carregarCotacoes({
+    async function carregarCotacoes({
     forcarAtualizacao = false,
   } = {}) {
-    const dadosSalvos =
-      obterCotacoesSalvas();
+    const dadosSalvos = obterCotacoesSalvas();
 
     if (dadosSalvos) {
-      setCotacoes(
-        dadosSalvos.cotacoes
-      );
+      setCotacoes(dadosSalvos.cotacoes);
 
       setUltimaAtualizacaoCotacoes(
-        new Date(
-          dadosSalvos.atualizadoEm
-        )
+        new Date(dadosSalvos.atualizadoEm)
       );
 
-      const cacheAindaValido =
-        Date.now() -
-          dadosSalvos.atualizadoEm <
+      const cacheValido =
+        Date.now() - dadosSalvos.atualizadoEm <
         TEMPO_CACHE_COTACOES;
 
-      if (
-        cacheAindaValido &&
-        !forcarAtualizacao
-      ) {
+      if (cacheValido && !forcarAtualizacao) {
         return;
       }
     }
@@ -248,22 +364,20 @@ export function SettingsProvider({
     setErroCotacoes("");
 
     try {
-      const [
-        taxaDolar,
-        taxaEuro,
-      ] = await Promise.all([
+      const [usd, eur, cny] = await Promise.all([
         buscarTaxa("USD"),
         buscarTaxa("EUR"),
+        buscarTaxa("CNY"),
       ]);
 
       const novasCotacoes = {
         BRL: 1,
-        USD: taxaDolar,
-        EUR: taxaEuro,
+        USD: usd,
+        EUR: eur,
+        CNY: cny,
       };
 
-      const atualizadoEm =
-        Date.now();
+      const atualizadoEm = Date.now();
 
       setCotacoes(novasCotacoes);
 
@@ -276,64 +390,73 @@ export function SettingsProvider({
         atualizadoEm
       );
     } catch (erro) {
-      console.error(
-        "Erro ao atualizar as cotações:",
-        erro
-      );
+      console.error(erro);
 
       setErroCotacoes(
-        "Não foi possível atualizar as cotações. Os últimos valores disponíveis serão usados."
+        "Não foi possível atualizar as cotações."
       );
 
-      if (!dadosSalvos) {
-        setCotacoes(
-          cotacoesIniciais
-        );
+      if (dadosSalvos?.cotacoes) {
+        setCotacoes(dadosSalvos.cotacoes);
+      } else {
+        setCotacoes(cotacoesIniciais);
       }
     } finally {
       setCarregandoCotacoes(false);
     }
   }
 
-  function atualizarSetting(
-    chave,
-    valor
-  ) {
-    setSettings(
-      (configuracoesAnteriores) => ({
-        ...configuracoesAnteriores,
-        [chave]: valor,
-      })
-    );
+  function atualizarSetting(chave, valor) {
+    setSettings((anterior) => ({
+      ...anterior,
+      [chave]: valor,
+    }));
+  }
+
+  function alternarTema() {
+    setSettings((anterior) => ({
+      ...anterior,
+      tema:
+        anterior.tema === "escuro"
+          ? "claro"
+          : "escuro",
+    }));
   }
 
   function restaurarConfiguracoes() {
-    setSettings(
-      configuracoesIniciais
+    localStorage.removeItem(
+      chaveConfiguracoes
     );
+
+    localStorage.removeItem(
+      CHAVE_COTACOES
+    );
+
+    setSettings(
+      criarConfiguracoesIniciais(usuario)
+    );
+
+    setCotacoes(cotacoesIniciais);
+
+    carregarCotacoes({
+      forcarAtualizacao: true,
+    });
   }
 
   function converterMoeda(
     valorEmReais,
     moedaDestino = settings.moeda
   ) {
-    const valor = Number(
-      valorEmReais
-    );
+    const valor = Number(valorEmReais);
 
-    if (!Number.isFinite(valor)) {
+    if (!Number.isFinite(valor))
       return 0;
-    }
 
-    if (
-      moedaDestino === "BRL"
-    ) {
+    if (moedaDestino === "BRL")
       return valor;
-    }
 
-    const taxa = Number(
-      cotacoes[moedaDestino]
-    );
+    const taxa =
+      cotacoes[moedaDestino];
 
     if (
       !Number.isFinite(taxa) ||
@@ -346,54 +469,39 @@ export function SettingsProvider({
   }
 
   function formatarMoeda(
-    valorEmReais,
-    moedaDestino = settings.moeda
+    valor,
+    moeda = settings.moeda
   ) {
-    const valorConvertido =
-      converterMoeda(
-        valorEmReais,
-        moedaDestino
-      );
-
-    const quantidadeCentavos =
-      settings.mostrarCentavos
-        ? 2
-        : 0;
+    const convertido =
+      converterMoeda(valor, moeda);
 
     return new Intl.NumberFormat(
       "pt-BR",
       {
         style: "currency",
-        currency: moedaDestino,
-
+        currency: moeda,
         minimumFractionDigits:
-          quantidadeCentavos,
-
+          settings.mostrarCentavos
+            ? 2
+            : 0,
         maximumFractionDigits:
-          quantidadeCentavos,
+          settings.mostrarCentavos
+            ? 2
+            : 0,
       }
-    ).format(valorConvertido);
+    ).format(convertido);
   }
 
   function obterCotacao(
     moeda = settings.moeda
   ) {
-    if (moeda === "BRL") {
-      return 1;
-    }
-
-    return Number(
-      cotacoes[moeda]
-    ) || 1;
+    return cotacoes[moeda] || 1;
   }
 
   const textoUltimaAtualizacao =
     useMemo(() => {
-      if (
-        !ultimaAtualizacaoCotacoes
-      ) {
+      if (!ultimaAtualizacaoCotacoes)
         return "";
-      }
 
       return new Intl.DateTimeFormat(
         "pt-BR",
@@ -404,30 +512,34 @@ export function SettingsProvider({
       ).format(
         ultimaAtualizacaoCotacoes
       );
-    }, [
-      ultimaAtualizacaoCotacoes,
-    ]);
-
-  return (
+    }, [ultimaAtualizacaoCotacoes]);
+      return (
     <SettingsContext.Provider
       value={{
         settings,
 
+        // Tema
+        cores,
+        temas,
+        temaEscuro,
+
         atualizarSetting,
+        alternarTema,
         restaurarConfiguracoes,
 
+        // Cotações
         cotacoes,
         obterCotacao,
-
-        converterMoeda,
-        formatarMoeda,
-
         carregarCotacoes,
         carregandoCotacoes,
         erroCotacoes,
 
         ultimaAtualizacaoCotacoes,
         textoUltimaAtualizacao,
+
+        // Conversão
+        converterMoeda,
+        formatarMoeda,
       }}
     >
       {children}
@@ -436,9 +548,7 @@ export function SettingsProvider({
 }
 
 export function useSettings() {
-  const contexto = useContext(
-    SettingsContext
-  );
+  const contexto = useContext(SettingsContext);
 
   if (!contexto) {
     throw new Error(

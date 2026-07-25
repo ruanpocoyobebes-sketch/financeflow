@@ -106,7 +106,7 @@ function TransactionList({
         return "#3B82F6";
 
       default:
-        return "#CBD5E1";
+        return "var(--text-secondary, #cbd5e1)";
     }
   }
 
@@ -136,7 +136,7 @@ function TransactionList({
       default:
         return {
           background: "rgba(148, 163, 184, 0.12)",
-          color: "#CBD5E1",
+          color: "var(--text-secondary, #cbd5e1)",
           border: "1px solid rgba(148, 163, 184, 0.28)",
         };
     }
@@ -145,10 +145,11 @@ function TransactionList({
   return (
     <div
       style={{
-        background: "#1E293B",
+        background: "var(--panel-bg, #1e293b)",
         borderRadius: 14,
         padding: 20,
-        border: "1px solid #334155",
+        border: "1px solid var(--border-color, #334155)",
+        boxShadow: "var(--app-shadow)",
         overflowX: "auto",
       }}
     >
@@ -164,7 +165,7 @@ function TransactionList({
         <div>
           <h2
             style={{
-              color: "white",
+              color: "var(--text-primary, #ffffff)",
               marginTop: 0,
               marginBottom: 4,
             }}
@@ -174,7 +175,7 @@ function TransactionList({
 
           <p
             style={{
-              color: "#94A3B8",
+              color: "var(--text-secondary, #94a3b8)",
               margin: 0,
               fontSize: 14,
             }}
@@ -192,14 +193,14 @@ function TransactionList({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            border: "1px dashed #475569",
+            border: "1px dashed var(--border-color, #475569)",
             borderRadius: 10,
             padding: 20,
           }}
         >
           <p
             style={{
-              color: "#94A3B8",
+              color: "var(--text-secondary, #94a3b8)",
               margin: 0,
               textAlign: "center",
             }}
@@ -213,7 +214,7 @@ function TransactionList({
             width: "100%",
             minWidth: 820,
             borderCollapse: "collapse",
-            color: "white",
+            color: "var(--text-primary, #ffffff)",
           }}
         >
           <thead>
@@ -237,7 +238,8 @@ function TransactionList({
                 <tr
                   key={item.id}
                   style={{
-                    borderTop: "1px solid #334155",
+                    borderTop:
+                      "1px solid var(--border-color, #334155)",
                   }}
                 >
                   <td style={td}>
@@ -254,7 +256,7 @@ function TransactionList({
                   <td style={td}>
                     <div
                       style={{
-                        color: "#F8FAFC",
+                        color: "var(--text-primary, #f8fafc)",
                         fontWeight: 600,
                       }}
                     >
@@ -282,7 +284,7 @@ function TransactionList({
                   <td
                     style={{
                       ...td,
-                      color: "#CBD5E1",
+                      color: "var(--text-secondary, #cbd5e1)",
                     }}
                   >
                     {item.data}
@@ -341,7 +343,7 @@ function TransactionList({
 const th = {
   textAlign: "left",
   padding: "0 14px 12px 0",
-  color: "#94A3B8",
+  color: "var(--text-secondary, #94a3b8)",
   fontSize: 13,
   fontWeight: 700,
   whiteSpace: "nowrap",

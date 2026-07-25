@@ -1,37 +1,102 @@
+import { useState } from "react";
 import { useSettings } from "../context/SettingsContext";
 
+const ICONES = {
+  "Saldo disponível": "💰",
+  Receitas: "📈",
+  Despesas: "📉",
+  Investimentos: "💎",
+  "Guardado em metas": "🎯",
+};
+
 function Card({ titulo, valor, cor }) {
-  const { formatarMoeda } = useSettings();
+  const { formatarMoeda, cores } = useSettings();
+
+  const [hover, setHover] = useState(false);
 
   return (
     <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
       style={{
-        background: "#1E293B",
-        borderRadius: "14px",
-        padding: "22px",
-        boxShadow: "0 6px 15px rgba(0,0,0,.25)",
+        background: cores.painel,
+        border: `1px solid ${cores.borda}`,
+        borderRadius: 18,
+        padding: 22,
+        boxShadow: hover
+          ? "0 18px 35px rgba(0,0,0,.18)"
+          : cores.sombra,
+        transform: hover ? "translateY(-6px)" : "translateY(0)",
+        transition: ".25s",
+        cursor: "default",
       }}
     >
-      <p
+      <div
         style={{
-          color: "#94A3B8",
-          margin: 0,
-          marginBottom: 12,
-          fontSize: 15,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 20,
         }}
       >
-        {titulo}
-      </p>
+        <div>
+          <p
+            style={{
+              margin: 0,
+              color: cores.textoSecundario,
+              fontSize: 14,
+              fontWeight: 500,
+            }}
+          >
+            {titulo}
+          </p>
 
-      <h2
+          <h2
+            style={{
+              marginTop: 10,
+              marginBottom: 0,
+              color: cor,
+              fontSize: 30,
+              fontWeight: 700,
+            }}
+          >
+            {formatarMoeda(valor)}
+          </h2>
+        </div>
+
+        <div
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 16,
+            background: `${cor}22`,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: 28,
+          }}
+        >
+          {ICONES[titulo] || "💰"}
+        </div>
+      </div>
+
+      <div
         style={{
-          color: cor,
-          margin: 0,
-          fontSize: 28,
+          height: 6,
+          borderRadius: 999,
+          background: cores.fundoSecundario,
+          overflow: "hidden",
         }}
       >
-        {formatarMoeda(valor)}
-      </h2>
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            background: cor,
+            opacity: .8,
+          }}
+        />
+      </div>
     </div>
   );
 }
