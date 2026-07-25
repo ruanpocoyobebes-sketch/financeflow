@@ -12,6 +12,14 @@ const AuthContext = createContext(null);
 const CHAVE_CONTAS_CONHECIDAS =
   "mahafinance-contas-conhecidas";
 
+function normalizarTexto(valor) {
+  if (valor === null || valor === undefined) {
+    return "";
+  }
+
+  return String(valor).trim();
+}
+
 function carregarContasConhecidas() {
   try {
     const contasSalvas = localStorage.getItem(
@@ -24,7 +32,24 @@ function carregarContasConhecidas() {
 
     const contas = JSON.parse(contasSalvas);
 
-    return Array.isArray(contas) ? contas : [];
+    if (!Array.isArray(contas)) {
+      return [];
+    }
+
+    return contas
+      .filter(
+        (conta) =>
+          conta &&
+          typeof conta === "object" &&
+          conta.id &&
+          conta.email
+      )
+      .map((conta) => ({
+        ...conta,
+        email: normalizarTexto(conta.email),
+        nome: normalizarTexto(conta.nome),
+        avatarUrl: normalizarTexto(conta.avatarUrl),
+      }));
   } catch {
     return [];
   }
@@ -63,16 +88,24 @@ export function AuthProvider({ children }) {
         );
 
         const nome =
-          dadosAdicionais.nome?.trim() ||
-          usuarioConta.user_metadata?.nome?.trim() ||
-          usuarioConta.user_metadata?.full_name?.trim() ||
-          contaAnterior?.nome ||
-          usuarioConta.email.split("@")[0];
+          normalizarTexto(dadosAdicionais.nome) ||
+          normalizarTexto(
+            usuarioConta.user_metadata?.nome
+          ) ||
+          normalizarTexto(
+            usuarioConta.user_metadata?.full_name
+          ) ||
+          normalizarTexto(contaAnterior?.nome) ||
+          normalizarTexto(
+            usuarioConta.email
+          ).split("@")[0];
 
         const avatarUrl =
-          dadosAdicionais.avatarUrl ||
-          usuarioConta.user_metadata?.avatar_url ||
-          contaAnterior?.avatarUrl ||
+          normalizarTexto(dadosAdicionais.avatarUrl) ||
+          normalizarTexto(
+            usuarioConta.user_metadata?.avatar_url
+          ) ||
+          normalizarTexto(contaAnterior?.avatarUrl) ||
           "";
 
         const contaAtualizada = {
@@ -155,8 +188,9 @@ export function AuthProvider({ children }) {
     email,
     senha,
   }) {
-    const emailTratado = email.trim().toLowerCase();
-    const nomeTratado = nome.trim();
+    const emailTratado =
+      normalizarTexto(email).toLowerCase();
+    const nomeTratado = normalizarTexto(nome);
 
     const { data, error } = await supabase.auth.signUp({
       email: emailTratado,
@@ -183,7 +217,8 @@ export function AuthProvider({ children }) {
   }
 
   async function entrar({ email, senha }) {
-    const emailTratado = email.trim().toLowerCase();
+    const emailTratado =
+      normalizarTexto(email).toLowerCase();
 
     const { data, error } =
       await supabase.auth.signInWithPassword({
@@ -225,10 +260,13 @@ export function AuthProvider({ children }) {
           ? {
               ...conta,
               ...(nome !== undefined
-                ? { nome: nome.trim() }
+                ? { nome: normalizarTexto(nome) }
                 : {}),
               ...(avatarUrl !== undefined
-                ? { avatarUrl: avatarUrl || "" }
+                ? {
+                    avatarUrl:
+                      normalizarTexto(avatarUrl),
+                  }
                 : {}),
             }
           : conta

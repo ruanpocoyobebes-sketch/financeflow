@@ -31,7 +31,7 @@ function Configuracoes() {
   } = useSettings();
 
   const [nomeTemporario, setNomeTemporario] = useState(
-    settings.nome || ""
+    String(settings.nome || "")
   );
 
   const [mensagem, setMensagem] = useState("");
@@ -39,7 +39,9 @@ function Configuracoes() {
     useState(false);
 
   useEffect(() => {
-    setNomeTemporario(settings.nome || "");
+    setNomeTemporario(
+      String(settings.nome || "")
+    );
   }, [settings.nome]);
 
   const moedas = [
@@ -178,8 +180,8 @@ function Configuracoes() {
 
   function obterInicialConta(conta) {
     const texto =
-      conta.nome?.trim() ||
-      conta.email?.trim() ||
+      String(conta.nome || "").trim() ||
+      String(conta.email || "").trim() ||
       "U";
 
     return texto.charAt(0).toUpperCase();

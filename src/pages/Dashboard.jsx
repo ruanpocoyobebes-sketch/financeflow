@@ -263,7 +263,8 @@ function Dashboard() {
   }
 
   const saudacao = obterSaudacao();
-  const nomeUsuario = settings.nome?.trim();
+  const nomeUsuario =
+    String(settings.nome || "").trim();
 
   const primeiraLetra = nomeUsuario
     ? nomeUsuario.charAt(0).toUpperCase()

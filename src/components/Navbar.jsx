@@ -6,7 +6,8 @@ function Navbar() {
 
   const [hover, setHover] = useState(false);
 
-  const nome = settings.nome?.trim() || "Usuário";
+  const nome =
+    String(settings.nome || "").trim() || "Usuário";
   const inicial = nome.charAt(0).toUpperCase();
 
   return (
