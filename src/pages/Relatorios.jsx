@@ -23,6 +23,7 @@ import {
   YAxis,
 } from "recharts";
 import { useFinance } from "../context/FinanceContext";
+import { useSettings } from "../context/SettingsContext";
 
 const CORES_CATEGORIAS = [
   "#EF4444",
@@ -38,12 +39,26 @@ const CORES_CATEGORIAS = [
 ];
 
 function Relatorios() {
+  const { cores } = useSettings();
   const {
     receitas,
     despesas,
     investimentos,
     metas,
   } = useFinance();
+
+  const variaveisTema = {
+    "--rel-fundo": cores.fundo,
+    "--rel-fundo-secundario": cores.fundoSecundario,
+    "--rel-painel": cores.painel,
+    "--rel-painel-hover": cores.painelHover,
+    "--rel-borda": cores.borda,
+    "--rel-texto": cores.texto,
+    "--rel-texto-secundario": cores.textoSecundario,
+    "--rel-texto-suave": cores.textoSuave,
+    "--rel-input": cores.input,
+    "--rel-sombra": cores.sombra,
+  };
 
   const [periodo, setPeriodo] = useState("todos");
   const [dataInicial, setDataInicial] = useState("");
@@ -340,7 +355,8 @@ function Relatorios() {
   return (
     <div
       style={{
-        color: "white",
+        ...variaveisTema,
+        color: cores.texto,
         paddingBottom: 40,
       }}
     >
@@ -358,7 +374,7 @@ function Relatorios() {
           <p
             style={{
               margin: 0,
-              color: "#94A3B8",
+              color: cores.textoSecundario,
             }}
           >
             Analise suas movimentações, categorias e
@@ -534,16 +550,16 @@ function Relatorios() {
               <BarChart data={evolucaoMensal}>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="#334155"
+                  stroke={cores.borda}
                 />
 
                 <XAxis
                   dataKey="mes"
-                  stroke="#94A3B8"
+                  stroke={cores.textoSecundario}
                 />
 
                 <YAxis
-                  stroke="#94A3B8"
+                  stroke={cores.textoSecundario}
                   tickFormatter={(valor) =>
                     `R$ ${Number(valor).toLocaleString(
                       "pt-BR",
@@ -632,7 +648,7 @@ function Relatorios() {
                                 CORES_CATEGORIAS.length
                             ]
                           }
-                          stroke="#1E293B"
+                          stroke={cores.painel}
                           strokeWidth={2}
                         />
                       )
@@ -651,7 +667,7 @@ function Relatorios() {
                     formatter={(valor) => (
                       <span
                         style={{
-                          color: "#CBD5E1",
+                          color: cores.texto,
                         }}
                       >
                         {valor}
@@ -821,7 +837,7 @@ function Destaque({
 
           <span
             style={{
-              color: "white",
+              color: "var(--rel-texto)",
               marginTop: 8,
               fontWeight: 600,
             }}
@@ -836,7 +852,7 @@ function Destaque({
       ) : (
         <span
           style={{
-            color: "#64748B",
+            color: "var(--rel-texto-suave)",
             marginTop: 16,
           }}
         >
@@ -938,7 +954,7 @@ function Estatistica({
         <strong
           style={{
             display: "block",
-            color: "white",
+            color: "var(--rel-texto)",
             fontSize: 19,
             marginTop: 6,
           }}
@@ -991,8 +1007,9 @@ const areaFiltros = {
   alignItems: "flex-end",
   gap: 14,
   flexWrap: "wrap",
-  background: "#1E293B",
-  border: "1px solid #334155",
+  background: "var(--rel-painel)",
+  border: "1px solid var(--rel-borda)",
+  boxShadow: "var(--rel-sombra)",
   padding: 18,
   borderRadius: 14,
   marginBottom: 24,
@@ -1000,7 +1017,7 @@ const areaFiltros = {
 
 const labelFiltro = {
   display: "block",
-  color: "#CBD5E1",
+  color: "var(--rel-texto)",
   fontSize: 13,
   fontWeight: 600,
   marginBottom: 6,
@@ -1010,17 +1027,17 @@ const inputFiltro = {
   minWidth: 170,
   padding: "10px 12px",
   borderRadius: 8,
-  border: "1px solid #334155",
-  background: "#0F172A",
-  color: "white",
+  border: "1px solid var(--rel-borda)",
+  background: "var(--rel-input)",
+  color: "var(--rel-texto)",
   outline: "none",
 };
 
 const periodoSelecionado = {
   padding: "10px 14px",
   borderRadius: 8,
-  background: "#0F172A",
-  color: "#94A3B8",
+  background: "var(--rel-fundo-secundario)",
+  color: "var(--rel-texto-secundario)",
   fontSize: 14,
 };
 
@@ -1035,8 +1052,9 @@ const gradeCards = {
 const card = {
   display: "flex",
   flexDirection: "column",
-  background: "#1E293B",
-  border: "1px solid #334155",
+  background: "var(--rel-painel)",
+  border: "1px solid var(--rel-borda)",
+  boxShadow: "var(--rel-sombra)",
   borderRadius: 14,
   padding: 20,
 };
@@ -1053,14 +1071,14 @@ const iconeCard = {
 };
 
 const tituloCard = {
-  color: "#94A3B8",
+  color: "var(--rel-texto-secundario)",
   fontSize: 14,
   fontWeight: 600,
 };
 
 const detalheCard = {
   display: "block",
-  color: "#64748B",
+  color: "var(--rel-texto-suave)",
   marginTop: 7,
   fontSize: 12,
 };
@@ -1092,45 +1110,47 @@ const gradeCategorias = {
 const painel = {
   display: "flex",
   flexDirection: "column",
-  background: "#1E293B",
-  border: "1px solid #334155",
+  background: "var(--rel-painel)",
+  border: "1px solid var(--rel-borda)",
+  boxShadow: "var(--rel-sombra)",
   borderRadius: 14,
   padding: 20,
 };
 
 const tituloPainel = {
-  color: "white",
+  color: "var(--rel-texto)",
   marginTop: 0,
   marginBottom: 5,
   fontSize: 20,
 };
 
 const subtituloPainel = {
-  color: "#94A3B8",
+  color: "var(--rel-texto-secundario)",
   marginTop: 0,
   marginBottom: 18,
   fontSize: 14,
 };
 
 const tooltip = {
-  background: "#0F172A",
-  border: "1px solid #334155",
+  background: "var(--rel-painel)",
+  border: "1px solid var(--rel-borda)",
   borderRadius: 10,
-  color: "white",
+  color: "var(--rel-texto)",
+  boxShadow: "var(--rel-sombra)",
 };
 
 const linhaCategoria = {
   display: "flex",
   justifyContent: "space-between",
   gap: 10,
-  color: "#E2E8F0",
+  color: "var(--rel-texto)",
   fontSize: 14,
 };
 
 const barraFundo = {
   width: "100%",
   height: 7,
-  background: "#0F172A",
+  background: "var(--rel-fundo-secundario)",
   borderRadius: 999,
   marginTop: 8,
   overflow: "hidden",
@@ -1148,8 +1168,8 @@ const estatistica = {
   display: "flex",
   alignItems: "center",
   gap: 14,
-  background: "#0F172A",
-  border: "1px solid #334155",
+  background: "var(--rel-fundo-secundario)",
+  border: "1px solid var(--rel-borda)",
   borderRadius: 11,
   padding: 16,
 };
@@ -1171,9 +1191,9 @@ const mensagemVazia = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  color: "#64748B",
+  color: "var(--rel-texto-suave)",
   textAlign: "center",
-  border: "1px dashed #475569",
+  border: "1px dashed var(--rel-borda)",
   borderRadius: 10,
   marginTop: 15,
 };

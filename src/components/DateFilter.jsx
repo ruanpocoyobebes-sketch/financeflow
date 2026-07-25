@@ -17,7 +17,7 @@ function DateFilter({
       <div>
         <label
           style={{
-            color: "white",
+            color: "var(--text-primary, #ffffff)",
             display: "block",
             marginBottom: 8,
           }}
@@ -38,7 +38,7 @@ function DateFilter({
       <div>
         <label
           style={{
-            color: "white",
+            color: "var(--text-primary, #ffffff)",
             display: "block",
             marginBottom: 8,
           }}
@@ -60,9 +60,9 @@ function DateFilter({
 }
 
 const input = {
-  background: "#0F172A",
-  color: "white",
-  border: "1px solid #334155",
+  background: "var(--input-bg, #0f172a)",
+  color: "var(--text-primary, #ffffff)",
+  border: "1px solid var(--border-color, #334155)",
   padding: "10px 15px",
   borderRadius: 8,
   fontSize: 15,

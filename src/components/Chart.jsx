@@ -28,7 +28,10 @@ function Chart({
   investimentos = 0,
   metas = 0,
 }) {
-  const { formatarMoeda } = useSettings();
+  const {
+    formatarMoeda,
+    cores,
+  } = useSettings();
 
   const totalReceitas = Math.max(
     Number(receitas) || 0,
@@ -110,28 +113,33 @@ function Chart({
     titulo,
     descricao,
     dados,
-    cores,
+    coresGrafico,
     mensagemVazia,
   }) {
-    return (
+        return (
       <section
         style={{
-          background: "#1E293B",
-          borderRadius: 16,
+          background: cores.painel,
+          borderRadius: 18,
           padding: 24,
-          border: "1px solid #334155",
-          boxShadow:
-            "0 10px 30px rgba(0,0,0,0.22)",
+          border: `1px solid ${cores.borda}`,
+          boxShadow: cores.sombra,
           minWidth: 0,
+          transition: ".25s",
         }}
       >
-        <div>
+        <div
+          style={{
+            marginBottom: 18,
+          }}
+        >
           <h2
             style={{
-              color: "white",
-              marginTop: 0,
-              marginBottom: 5,
+              color: cores.texto,
+              margin: 0,
+              marginBottom: 6,
               fontSize: 22,
+              fontWeight: 700,
             }}
           >
             {titulo}
@@ -139,10 +147,10 @@ function Chart({
 
           <p
             style={{
-              color: "#94A3B8",
-              marginTop: 0,
-              marginBottom: 0,
+              color: cores.textoSecundario,
+              margin: 0,
               fontSize: 14,
+              lineHeight: 1.5,
             }}
           >
             {descricao}
@@ -152,8 +160,7 @@ function Chart({
         <div
           style={{
             width: "100%",
-            height: 320,
-            marginTop: 10,
+            height: 330,
           }}
         >
           {dados.length > 0 ? (
@@ -168,19 +175,19 @@ function Chart({
                   nameKey="name"
                   cx="50%"
                   cy="45%"
-                  innerRadius={62}
-                  outerRadius={100}
+                  innerRadius={70}
+                  outerRadius={108}
                   paddingAngle={4}
-                  animationDuration={800}
+                  animationDuration={900}
                   label={renderLabel}
                   labelLine={false}
                 >
                   {dados.map((item) => (
                     <Cell
                       key={item.name}
-                      fill={cores[item.name]}
-                      stroke="#1E293B"
-                      strokeWidth={2}
+                      fill={coresGrafico[item.name]}
+                      stroke={cores.painel}
+                      strokeWidth={3}
                     />
                   ))}
                 </Pie>
@@ -191,17 +198,17 @@ function Chart({
                     name,
                   ]}
                   contentStyle={{
-                    background: "#0F172A",
-                    border:
-                      "1px solid #334155",
-                    borderRadius: 10,
-                    color: "white",
+                    background: cores.painel,
+                    border: `1px solid ${cores.borda}`,
+                    borderRadius: 12,
+                    color: cores.texto,
+                    boxShadow: cores.sombra,
                   }}
                   labelStyle={{
-                    color: "white",
+                    color: cores.texto,
                   }}
                   itemStyle={{
-                    color: "white",
+                    color: cores.texto,
                   }}
                 />
 
@@ -212,7 +219,8 @@ function Chart({
                   formatter={(value) => (
                     <span
                       style={{
-                        color: "#E2E8F0",
+                        color: cores.texto,
+                        fontSize: 14,
                       }}
                     >
                       {value}
@@ -228,9 +236,10 @@ function Chart({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                color: "#94A3B8",
+                color: cores.textoSecundario,
                 textAlign: "center",
                 padding: 20,
+                fontSize: 15,
               }}
             >
               {mensagemVazia}
@@ -240,8 +249,7 @@ function Chart({
       </section>
     );
   }
-
-  return (
+    return (
     <div
       style={{
         marginTop: 30,
@@ -259,7 +267,7 @@ function Chart({
           titulo="Distribuição do patrimônio"
           descricao="Veja onde seu patrimônio está atualmente."
           dados={dadosPatrimonio}
-          cores={CORES_PATRIMONIO}
+          coresGrafico={CORES_PATRIMONIO}
           mensagemVazia="Nenhum patrimônio registrado no período."
         />
 
@@ -267,7 +275,7 @@ function Chart({
           titulo="Fluxo financeiro"
           descricao="Compare receitas, despesas, investimentos e metas."
           dados={dadosFluxo}
-          cores={CORES_FLUXO}
+          coresGrafico={CORES_FLUXO}
           mensagemVazia="Nenhuma movimentação registrada no período."
         />
       </div>
@@ -275,24 +283,20 @@ function Chart({
       {saldoDisponivel < 0 && (
         <div
           style={{
-            background:
-              "rgba(239, 68, 68, 0.1)",
-            border:
-              "1px solid rgba(239, 68, 68, 0.35)",
-            borderRadius: 12,
-            padding: 14,
+            background: "rgba(239,68,68,.12)",
+            border: "1px solid rgba(239,68,68,.35)",
+            borderRadius: 14,
+            padding: 16,
             marginTop: 20,
-            color: "#FCA5A5",
+            color: "#EF4444",
             textAlign: "center",
+            fontWeight: 600,
           }}
         >
-          As saídas ultrapassaram o dinheiro disponível em{" "}
+          ⚠️ As saídas ultrapassaram o dinheiro disponível em{" "}
           <strong>
-            {formatarMoeda(
-              Math.abs(saldoDisponivel)
-            )}
+            {formatarMoeda(Math.abs(saldoDisponivel))}
           </strong>
-          .
         </div>
       )}
 
@@ -300,23 +304,23 @@ function Chart({
         style={{
           display: "grid",
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(180px, 1fr))",
-          gap: 15,
-          marginTop: 20,
+            "repeat(auto-fit, minmax(190px, 1fr))",
+          gap: 18,
+          marginTop: 24,
         }}
       >
         <Resumo
-          titulo="Patrimônio total"
+          titulo="Patrimônio"
           valor={formatarMoeda(patrimonioTotal)}
           cor={
             patrimonioTotal >= 0
-              ? "#FFFFFF"
+              ? "#22C55E"
               : "#EF4444"
           }
         />
 
         <Resumo
-          titulo="Saldo disponível"
+          titulo="Saldo"
           valor={formatarMoeda(saldoDisponivel)}
           cor={
             saldoDisponivel >= 0
@@ -326,19 +330,19 @@ function Chart({
         />
 
         <Resumo
-          titulo="Total em despesas"
+          titulo="Despesas"
           valor={formatarMoeda(totalDespesas)}
           cor="#EF4444"
         />
 
         <Resumo
-          titulo="Total investido"
+          titulo="Investimentos"
           valor={formatarMoeda(totalInvestimentos)}
           cor="#3B82F6"
         />
 
         <Resumo
-          titulo="Guardado em metas"
+          titulo="Metas"
           valor={formatarMoeda(totalMetas)}
           cor="#A855F7"
         />
@@ -352,31 +356,37 @@ function Resumo({
   valor,
   cor,
 }) {
+  const { cores } = useSettings();
+
   return (
     <div
       style={{
+        background: cores.painel,
+        border: `1px solid ${cores.borda}`,
+        borderRadius: 16,
+        padding: 18,
         textAlign: "center",
-        background: "#0F172A",
-        border: "1px solid #334155",
-        borderRadius: 12,
-        padding: 16,
+        boxShadow: cores.sombra,
+        transition: ".25s",
       }}
     >
-      <span
+      <p
         style={{
-          color: "#94A3B8",
+          margin: 0,
+          color: cores.textoSecundario,
           fontSize: 13,
         }}
       >
         {titulo}
-      </span>
+      </p>
 
       <h2
         style={{
-          color: cor,
-          marginTop: 6,
+          marginTop: 10,
           marginBottom: 0,
-          fontSize: 21,
+          color: cor,
+          fontSize: 22,
+          fontWeight: 700,
         }}
       >
         {valor}
