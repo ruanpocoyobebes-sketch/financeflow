@@ -100,8 +100,10 @@ async function atualizarPerfil({
 }
 
 function usuarioTemPlanoPremium(perfil) {
-  const plano = perfil?.plano
-    ?.trim()
+  const plano = String(
+    perfil?.plano || ""
+  )
+    .trim()
     .toLowerCase();
 
   return plano === "premium";

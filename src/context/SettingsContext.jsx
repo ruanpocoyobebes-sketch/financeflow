@@ -25,6 +25,14 @@ const configuracoesIniciais = {
   formatoData: "dd/MM/yyyy",
 };
 
+function normalizarTexto(valor) {
+  if (valor === null || valor === undefined) {
+    return "";
+  }
+
+  return String(valor).trim();
+}
+
 function obterConfiguracoesSalvas(chave) {
   try {
     const salvo = localStorage.getItem(chave);
@@ -33,9 +41,14 @@ function obterConfiguracoesSalvas(chave) {
       return null;
     }
 
+    const configuracoesSalvas = JSON.parse(salvo);
+
     return {
       ...configuracoesIniciais,
-      ...JSON.parse(salvo),
+      ...configuracoesSalvas,
+      nome: normalizarTexto(
+        configuracoesSalvas?.nome
+      ),
     };
   } catch {
     return null;
@@ -44,9 +57,13 @@ function obterConfiguracoesSalvas(chave) {
 
 function criarConfiguracoesIniciais(usuario) {
   const nome =
-    usuario?.user_metadata?.nome?.trim() ||
-    usuario?.user_metadata?.full_name?.trim() ||
-    usuario?.email?.split("@")[0] ||
+    normalizarTexto(
+      usuario?.user_metadata?.nome
+    ) ||
+    normalizarTexto(
+      usuario?.user_metadata?.full_name
+    ) ||
+    normalizarTexto(usuario?.email).split("@")[0] ||
     "";
 
   return {
@@ -316,7 +333,9 @@ export function SettingsProvider({ children }) {
 
   async function buscarTaxa(moeda) {
     const resposta = await fetch(
-      `https://api.frankfurter.app/latest?from=BRL&to=${moeda}`
+      `https://api.frankfurter.dev/v2/rate/BRL/${encodeURIComponent(
+        moeda
+      )}`
     );
 
     if (!resposta.ok) {
@@ -327,9 +346,7 @@ export function SettingsProvider({ children }) {
 
     const dados = await resposta.json();
 
-    const taxa = Number(
-      dados.rates?.[moeda]
-    );
+    const taxa = Number(dados.rate);
 
     if (!taxa || taxa <= 0) {
       throw new Error(
