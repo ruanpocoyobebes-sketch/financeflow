@@ -124,19 +124,26 @@ function FinanceModal({
     };
 
     if (transacaoEditando) {
-      dados.id = transacaoEditando.id;
-
       switch (tipo) {
         case "Receita":
-          editarReceita(dados);
+          editarReceita(
+            transacaoEditando.id,
+            dados
+          );
           break;
 
         case "Despesa":
-          editarDespesa(dados);
+          editarDespesa(
+            transacaoEditando.id,
+            dados
+          );
           break;
 
         case "Investimento":
-          editarInvestimento(dados);
+          editarInvestimento(
+            transacaoEditando.id,
+            dados
+          );
           break;
 
         default:
@@ -145,15 +152,27 @@ function FinanceModal({
     } else {
       switch (tipo) {
         case "Receita":
-          adicionarReceita(dados);
+          adicionarReceita(
+            dados.descricao,
+            dados.valor,
+            dados.categoria
+          );
           break;
 
         case "Despesa":
-          adicionarDespesa(dados);
+          adicionarDespesa(
+            dados.descricao,
+            dados.valor,
+            dados.categoria
+          );
           break;
 
         case "Investimento":
-          adicionarInvestimento(dados);
+          adicionarInvestimento(
+            dados.descricao,
+            dados.valor,
+            dados.categoria
+          );
           break;
 
         default:
@@ -170,6 +189,7 @@ function FinanceModal({
 
   return (
     <div
+      className="finance-modal-overlay"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           fecharModal();
@@ -188,6 +208,7 @@ function FinanceModal({
       }}
     >
       <div
+        className="finance-modal-card"
         style={{
           width: "100%",
           maxWidth: 500,
@@ -314,6 +335,7 @@ function FinanceModal({
           }}
         />
                 <div
+          className="finance-modal-actions"
           style={{
             display: "flex",
             gap: 14,

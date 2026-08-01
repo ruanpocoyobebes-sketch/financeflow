@@ -12,6 +12,7 @@ function Navbar() {
 
   return (
     <header
+      className="dashboard-navbar"
       style={{
         background: cores.painel,
         border: `1px solid ${cores.borda}`,
@@ -51,6 +52,7 @@ function Navbar() {
       </div>
 
       <div
+        className="dashboard-navbar-actions"
         style={{
           display: "flex",
           alignItems: "center",
@@ -58,6 +60,8 @@ function Navbar() {
         }}
       >
         <button
+          className="dashboard-navbar-shortcut"
+          type="button"
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
           style={{
@@ -76,6 +80,7 @@ function Navbar() {
         </button>
 
         <div
+          className="dashboard-navbar-profile"
           style={{
             display: "flex",
             alignItems: "center",

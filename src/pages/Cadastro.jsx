@@ -64,6 +64,7 @@ function Cadastro() {
 
   return (
     <div
+      className="auth-page"
       style={{
         minHeight: "100vh",
         display: "flex",
@@ -75,6 +76,7 @@ function Cadastro() {
       }}
     >
       <form
+        className="auth-card"
         onSubmit={cadastrar}
         style={{
           width: "100%",

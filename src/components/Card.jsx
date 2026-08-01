@@ -16,6 +16,7 @@ function Card({ titulo, valor, cor }) {
 
   return (
     <div
+      className="finance-summary-card"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
@@ -56,8 +57,9 @@ function Card({ titulo, valor, cor }) {
               marginTop: 10,
               marginBottom: 0,
               color: cor,
-              fontSize: 30,
+              fontSize: "clamp(24px, 5vw, 30px)",
               fontWeight: 700,
+              overflowWrap: "anywhere",
             }}
           >
             {formatarMoeda(valor)}

@@ -102,7 +102,10 @@ function Entrar() {
 
   if (carregandoSessao) {
     return (
-      <div style={estilos.pagina}>
+      <div
+        className="auth-page"
+        style={estilos.pagina}
+      >
         <div style={estilos.carregamento}>
           Verificando sua conta...
         </div>
@@ -111,8 +114,12 @@ function Entrar() {
   }
 
   return (
-    <div style={estilos.pagina}>
+    <div
+      className="auth-page"
+      style={estilos.pagina}
+    >
       <form
+        className="auth-card"
         onSubmit={fazerLogin}
         style={estilos.formulario}
       >

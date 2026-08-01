@@ -285,7 +285,6 @@ function Despesas() {
       border: "1px solid rgba(148, 163, 184, 0.18)",
       background: cores.input,
       color: cores.texto,
-      color: cores.texto,
       outline: "none",
       fontSize: "14px",
     },
@@ -479,7 +478,10 @@ function Despesas() {
   };
 
   return (
-    <div style={ui.page(cores)}>
+    <div
+      className="app-page"
+      style={ui.page(cores)}
+    >
       <header style={estilos.cabecalho}>
         <div>
           <h1 style={ui.title(cores)}>Despesas</h1>
@@ -491,7 +493,10 @@ function Despesas() {
         </div>
       </header>
 
-      <section style={estilos.gradeCards}>
+      <section
+        className="responsive-grid"
+        style={estilos.gradeCards}
+      >
         <article style={ui.card(cores)}>
           <div style={estilos.cardTopo}>
             <span style={estilos.cardLabel}>Total de despesas</span>
@@ -544,8 +549,14 @@ function Despesas() {
         </article>
       </section>
 
-      <section style={ui.panel(cores)}>
-        <div style={estilos.painelCabecalho}>
+      <section
+        className="responsive-panel"
+        style={ui.panel(cores)}
+      >
+        <div
+          className="responsive-panel-header"
+          style={estilos.painelCabecalho}
+        >
           <div>
             <h2 style={estilos.painelTitulo}>Histórico de despesas</h2>
 
@@ -554,7 +565,10 @@ function Despesas() {
             </p>
           </div>
 
-          <div style={estilos.filtros}>
+          <div
+            className="responsive-filters"
+            style={estilos.filtros}
+          >
             <input
               type="text"
               value={busca}
@@ -619,8 +633,14 @@ function Despesas() {
           </div>
         ) : (
           <>
-            <div style={estilos.tabelaContainer}>
-              <table style={estilos.tabela}>
+            <div
+              className="responsive-table-scroll"
+              style={estilos.tabelaContainer}
+            >
+              <table
+                className="responsive-table"
+                style={estilos.tabela}
+              >
                 <thead style={estilos.tabelaCabecalho}>
                   <tr>
                     <th style={estilos.th}>Descrição</th>

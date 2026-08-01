@@ -343,9 +343,9 @@ card: ui.card(cores),
     },
 
     painel: {
-      border:ui.panel(cores),
-  overflow: "hidden",
-},
+      ...ui.panel(cores),
+      overflow: "hidden",
+    },
 
     painelInterno: {
       padding: "20px",
@@ -480,15 +480,15 @@ card: ui.card(cores),
     },
 
     input: {
-      width:ui.input(cores),
-  width: "100%",
-  boxSizing: "border-box",
-},
+      ...ui.input(cores),
+      width: "100%",
+      boxSizing: "border-box",
+    },
 
     select: {
-      padding:ui.input(cores),
-  cursor: "pointer",
-},
+      ...ui.input(cores),
+      cursor: "pointer",
+    },
 
     tabelaContainer: {
       width: "100%",
@@ -648,7 +648,10 @@ card: ui.card(cores),
   };
 
   return (
-    <div style={ui.page(cores)}>
+    <div
+      className="app-page"
+      style={ui.page(cores)}
+    >
       <header style={estilos.cabecalho}>
         <div>
           <h1 style={ui.title(cores)}>Investimentos</h1>
@@ -660,7 +663,10 @@ card: ui.card(cores),
         </div>
       </header>
 
-      <section style={estilos.gradeCards}>
+      <section
+        className="responsive-grid"
+        style={estilos.gradeCards}
+      >
         <article style={ui.card(cores)}>
           <div style={estilos.cardTopo}>
             <span style={estilos.cardLabel}>Total investido</span>
@@ -717,7 +723,10 @@ card: ui.card(cores),
         </article>
       </section>
 
-      <section style={estilos.gradeInformacoes}>
+      <section
+        className="responsive-grid"
+        style={estilos.gradeInformacoes}
+      >
         <article style={ui.panel(cores)}>
           <div style={estilos.painelInterno}>
             <h2 style={estilos.painelTitulo}>Participação do mês atual</h2>
@@ -792,8 +801,14 @@ card: ui.card(cores),
         </article>
       </section>
 
-      <section style={ui.panel(cores)}>
-        <div style={estilos.painelCabecalho}>
+      <section
+        className="responsive-panel"
+        style={ui.panel(cores)}
+      >
+        <div
+          className="responsive-panel-header"
+          style={estilos.painelCabecalho}
+        >
           <div>
             <h2 style={estilos.painelTitulo}>
               Histórico de investimentos
@@ -804,7 +819,10 @@ card: ui.card(cores),
             </p>
           </div>
 
-          <div style={estilos.filtros}>
+          <div
+            className="responsive-filters"
+            style={estilos.filtros}
+          >
             <input
               type="text"
               value={busca}
@@ -872,8 +890,14 @@ card: ui.card(cores),
           </div>
         ) : (
           <>
-            <div style={estilos.tabelaContainer}>
-              <table style={estilos.tabela}>
+            <div
+              className="responsive-table-scroll"
+              style={estilos.tabelaContainer}
+            >
+              <table
+                className="responsive-table"
+                style={estilos.tabela}
+              >
                 <thead style={estilos.tabelaCabecalho}>
                   <tr>
                     <th style={estilos.th}>Descrição</th>

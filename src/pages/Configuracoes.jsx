@@ -517,8 +517,14 @@ function Configuracoes() {
   };
 
   return (
-    <div style={estilos.pagina}>
-      <header style={estilos.cabecalho}>
+    <div
+      className="app-page settings-page"
+      style={estilos.pagina}
+    >
+      <header
+        className="responsive-page-header"
+        style={estilos.cabecalho}
+      >
         <div>
           <h1 style={estilos.titulo}>
             Configurações
@@ -537,9 +543,18 @@ function Configuracoes() {
         )}
       </header>
 
-      <div style={estilos.grade}>
-        <section style={estilos.painel}>
-          <div style={estilos.cabecalhoPainel}>
+      <div
+        className="responsive-grid"
+        style={estilos.grade}
+      >
+        <section
+          className="responsive-panel"
+          style={estilos.painel}
+        >
+          <div
+            className="responsive-panel-header"
+            style={estilos.cabecalhoPainel}
+          >
             <div style={estilos.icone}>👤</div>
 
             <div>
@@ -596,6 +611,7 @@ function Configuracoes() {
             />
 
             <button
+              className="mobile-full-button"
               type="submit"
               style={{
                 ...estilos.botaoPrimario,
@@ -625,6 +641,7 @@ function Configuracoes() {
 
                 return (
                   <div
+                    className="settings-account-row"
                     key={conta.id}
                     style={estilos.conta}
                   >
@@ -696,8 +713,14 @@ function Configuracoes() {
           </div>
         </section>
 
-        <section style={estilos.painel}>
-          <div style={estilos.cabecalhoPainel}>
+        <section
+          className="responsive-panel"
+          style={estilos.painel}
+        >
+          <div
+            className="responsive-panel-header"
+            style={estilos.cabecalhoPainel}
+          >
             <div style={estilos.icone}>
               {temaEscuro ? "🌙" : "☀️"}
             </div>
@@ -714,6 +737,7 @@ function Configuracoes() {
           </div>
 
           <button
+            className="settings-option"
             type="button"
             onClick={alternarTema}
             style={{
@@ -744,12 +768,16 @@ function Configuracoes() {
       </div>
 
       <section
+        className="responsive-panel"
         style={{
           ...estilos.painel,
           marginTop: 22,
         }}
       >
-        <div style={estilos.cabecalhoPainel}>
+        <div
+          className="responsive-panel-header"
+          style={estilos.cabecalhoPainel}
+        >
           <div
             style={{
               ...estilos.icone,
@@ -772,6 +800,7 @@ function Configuracoes() {
         </div>
 
         <div
+          className="responsive-grid"
           style={{
             display: "grid",
             gridTemplateColumns:
@@ -866,6 +895,7 @@ function Configuracoes() {
         </div>
 
         <div
+          className="responsive-page-header"
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -929,13 +959,20 @@ function Configuracoes() {
       </section>
 
       <div
+        className="responsive-grid"
         style={{
           ...estilos.grade,
           marginTop: 22,
         }}
       >
-        <section style={estilos.painel}>
-          <div style={estilos.cabecalhoPainel}>
+        <section
+          className="responsive-panel"
+          style={estilos.painel}
+        >
+          <div
+            className="responsive-panel-header"
+            style={estilos.cabecalhoPainel}
+          >
             <div style={estilos.icone}>🔢</div>
 
             <div>
@@ -950,6 +987,7 @@ function Configuracoes() {
           </div>
 
           <button
+            className="settings-option"
             type="button"
             onClick={alterarCentavos}
             style={{
@@ -985,8 +1023,14 @@ function Configuracoes() {
           </button>
         </section>
 
-        <section style={estilos.painel}>
-          <div style={estilos.cabecalhoPainel}>
+        <section
+          className="responsive-panel"
+          style={estilos.painel}
+        >
+          <div
+            className="responsive-panel-header"
+            style={estilos.cabecalhoPainel}
+          >
             <div style={estilos.icone}>📋</div>
 
             <div>
@@ -1062,13 +1106,20 @@ function Configuracoes() {
       </div>
 
       <div
+        className="responsive-grid"
         style={{
           ...estilos.grade,
           marginTop: 22,
         }}
       >
-        <section style={estilos.painel}>
-          <div style={estilos.cabecalhoPainel}>
+        <section
+          className="responsive-panel"
+          style={estilos.painel}
+        >
+          <div
+            className="responsive-panel-header"
+            style={estilos.cabecalhoPainel}
+          >
             <div style={estilos.icone}>ℹ️</div>
 
             <div>
@@ -1125,7 +1176,10 @@ function Configuracoes() {
           </div>
         </section>
 
-        <section style={estilos.painel}>
+        <section
+          className="responsive-panel"
+          style={estilos.painel}
+        >
           <div style={estilos.cabecalhoPainel}>
             <div
               style={{

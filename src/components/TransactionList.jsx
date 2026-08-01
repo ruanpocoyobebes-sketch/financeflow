@@ -144,6 +144,7 @@ function TransactionList({
 
   return (
     <div
+      className="responsive-panel transaction-list"
       style={{
         background: "var(--panel-bg, #1e293b)",
         borderRadius: 14,
@@ -210,6 +211,7 @@ function TransactionList({
         </div>
       ) : (
         <table
+          className="responsive-table"
           style={{
             width: "100%",
             minWidth: 820,

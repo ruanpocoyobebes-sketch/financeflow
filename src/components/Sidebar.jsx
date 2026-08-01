@@ -159,6 +159,7 @@ function Sidebar() {
 
   return (
     <aside
+      className="app-sidebar"
       onMouseEnter={abrirSidebar}
       onMouseLeave={fecharSidebar}
       style={{
@@ -186,6 +187,7 @@ function Sidebar() {
       }}
     >
       <div
+        className="app-sidebar-brand"
         style={{
           minHeight: 44,
           marginBottom: expandida ? 18 : 30,
@@ -245,6 +247,7 @@ function Sidebar() {
       </div>
 
       <div
+        className="app-sidebar-summary"
         style={{
           height: expandida ? 105 : 0,
           marginBottom: expandida ? 18 : 0,
@@ -317,6 +320,8 @@ function Sidebar() {
       </div>
 
       <nav
+        className="app-sidebar-nav"
+        aria-label="Navegação principal"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -333,6 +338,7 @@ function Sidebar() {
 
           return (
             <NavLink
+              className="app-sidebar-link"
               key={item.rota}
               to={item.rota}
               end={item.rota === "/app"}
@@ -367,6 +373,7 @@ function Sidebar() {
               })}
             >
               <span
+                className="app-sidebar-link-icon"
                 style={{
                   width: 22,
                   minWidth: 22,
@@ -386,6 +393,7 @@ function Sidebar() {
               </span>
 
               <span
+                className="app-sidebar-link-copy"
                 style={{
                   flex: expandida ? 1 : "none",
                   width: expandida ? 165 : 0,
@@ -411,6 +419,7 @@ function Sidebar() {
 
                 {item.tipoValor && (
                   <strong
+                    className="app-sidebar-link-value"
                     style={{
                       display: "block",
                       marginTop: 4,
@@ -426,6 +435,7 @@ function Sidebar() {
 
               {item.premium && (
                 <span
+                  className="app-sidebar-premium"
                   style={{
                     marginLeft: "auto",
                     display: expandida
@@ -453,6 +463,7 @@ function Sidebar() {
       </nav>
 
       <div
+        className="app-sidebar-footer"
         style={{
           marginTop: "auto",
           height: expandida ? 20 : 0,
