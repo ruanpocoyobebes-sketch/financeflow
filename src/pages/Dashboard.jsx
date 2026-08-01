@@ -9,6 +9,7 @@ import TransactionList from "../components/TransactionList";
 import FinanceModal from "../components/FinanceModal";
 import Chart from "../components/Chart";
 import DateFilter from "../components/DateFilter";
+import ReceiptScanner from "../components/ReceiptScanner";
 
 function Dashboard() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -354,25 +355,29 @@ function Dashboard() {
           </div>
         </div>
 
-        <button
-          className="mobile-full-button"
-          type="button"
-          onClick={abrirNovaTransacao}
-          style={{
-            background: "#22C55E",
-            color: "white",
-            border: "none",
-            borderRadius: 10,
-            padding: "14px 22px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            fontSize: 15,
-            boxShadow:
-              "0 8px 20px rgba(34, 197, 94, 0.2)",
-          }}
-        >
-          + Nova Transação
-        </button>
+        <div className="dashboard-primary-actions">
+          <ReceiptScanner />
+
+          <button
+            className="mobile-full-button"
+            type="button"
+            onClick={abrirNovaTransacao}
+            style={{
+              background: "#22C55E",
+              color: "white",
+              border: "none",
+              borderRadius: 10,
+              padding: "14px 22px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: 15,
+              boxShadow:
+                "0 8px 20px rgba(34, 197, 94, 0.2)",
+            }}
+          >
+            + Nova Transação
+          </button>
+        </div>
       </div>
 
       <DateFilter
