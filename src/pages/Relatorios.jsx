@@ -354,13 +354,17 @@ function Relatorios() {
 
   return (
     <div
+      className="app-page reports-page"
       style={{
         ...variaveisTema,
         color: cores.texto,
         paddingBottom: 40,
       }}
     >
-      <div style={cabecalho}>
+      <div
+        className="responsive-page-header"
+        style={cabecalho}
+      >
         <div>
           <h1
             style={{
@@ -392,7 +396,10 @@ function Relatorios() {
         </button>
       </div>
 
-      <div style={areaFiltros}>
+      <div
+        className="responsive-filters report-filters"
+        style={areaFiltros}
+      >
         <div>
           <label style={labelFiltro}>
             Período
@@ -466,7 +473,10 @@ function Relatorios() {
         </div>
       </div>
 
-      <div style={gradeCards}>
+      <div
+        className="responsive-grid"
+        style={gradeCards}
+      >
         <CardRelatorio
           titulo="Entradas"
           valor={formatarMoeda(totalReceitas)}
@@ -512,7 +522,10 @@ function Relatorios() {
         />
       </div>
 
-      <div style={gradeDestaques}>
+      <div
+        className="responsive-grid"
+        style={gradeDestaques}
+      >
         <Destaque
           titulo="Maior entrada"
           item={maiorReceita}
@@ -535,8 +548,14 @@ function Relatorios() {
         />
       </div>
 
-      <div style={gradeGraficos}>
-        <section style={painel}>
+      <div
+        className="responsive-grid report-chart-grid"
+        style={gradeGraficos}
+      >
+        <section
+          className="responsive-panel report-chart-panel"
+          style={painel}
+        >
           <h2 style={tituloPainel}>
             Evolução mensal
           </h2>
@@ -545,7 +564,10 @@ function Relatorios() {
             Comparação das movimentações ao longo do ano.
           </p>
 
-          <div style={{ width: "100%", height: 340 }}>
+          <div
+            className="report-bar-chart"
+            style={{ width: "100%", height: 340 }}
+          >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={evolucaoMensal}>
                 <CartesianGrid
@@ -605,7 +627,10 @@ function Relatorios() {
           </div>
         </section>
 
-        <section style={painel}>
+        <section
+          className="responsive-panel"
+          style={painel}
+        >
           <h2 style={tituloPainel}>
             Despesas por categoria
           </h2>
@@ -618,6 +643,7 @@ function Relatorios() {
             <MensagemVazia />
           ) : (
             <div
+              className="report-pie-chart"
               style={{
                 width: "100%",
                 height: 340,
@@ -680,7 +706,10 @@ function Relatorios() {
           )}
         </section>
       </div>
-            <div style={gradeCategorias}>
+            <div
+        className="responsive-grid"
+        style={gradeCategorias}
+      >
         <ListaCategorias
           titulo="Entradas por categoria"
           dados={receitasPorCategoria}
@@ -703,7 +732,10 @@ function Relatorios() {
         />
       </div>
 
-      <section style={painel}>
+      <section
+        className="responsive-panel"
+        style={painel}
+      >
         <h2 style={tituloPainel}>
           Estatísticas gerais
         </h2>
@@ -712,7 +744,10 @@ function Relatorios() {
           Resumo das movimentações selecionadas.
         </p>
 
-        <div style={gradeEstatisticas}>
+        <div
+          className="responsive-grid"
+          style={gradeEstatisticas}
+        >
           <Estatistica
             titulo="Total de movimentações"
             valor={transacoesFiltradas.length}
@@ -780,7 +815,10 @@ function CardRelatorio({
   icone,
 }) {
   return (
-    <div style={card}>
+    <div
+      className="responsive-card"
+      style={card}
+    >
       <div
         style={{
           ...iconeCard,
@@ -818,7 +856,10 @@ function Destaque({
   formatarMoeda,
 }) {
   return (
-    <div style={painel}>
+    <div
+      className="responsive-panel"
+      style={painel}
+    >
       <span style={tituloCard}>
         {titulo}
       </span>
@@ -875,7 +916,10 @@ function ListaCategorias({
   );
 
   return (
-    <section style={painel}>
+    <section
+      className="responsive-panel"
+      style={painel}
+    >
       <h2 style={tituloPainel}>
         {titulo}
       </h2>

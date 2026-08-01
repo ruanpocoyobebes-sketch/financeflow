@@ -25,6 +25,7 @@ import AnaliseIA from "./pages/AnaliseIA";
 function AppLayout({ children }) {
   return (
     <div
+      className="app-shell"
       style={{
         display: "flex",
         minHeight: "100vh",
@@ -35,6 +36,7 @@ function AppLayout({ children }) {
       <Sidebar />
 
       <main
+        className="app-main"
         style={{
           flex: 1,
           minWidth: 0,

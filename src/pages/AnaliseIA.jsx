@@ -625,7 +625,10 @@ function AnaliseIA() {
 
   if (carregandoPerfil) {
     return (
-      <div style={estiloCentralizado}>
+      <div
+        className="app-page ai-page"
+        style={estiloCentralizado}
+      >
         <div style={estilos.carregamento}>
           <div style={estilos.spinner} />
 
@@ -639,7 +642,10 @@ function AnaliseIA() {
 
   if (erroPerfil) {
     return (
-      <div style={estiloPagina}>
+      <div
+        className="app-page ai-page"
+        style={estiloPagina}
+      >
         <div style={estilos.alertaErro}>
           {erroPerfil}
         </div>
@@ -649,8 +655,14 @@ function AnaliseIA() {
 
   if (!ehPremium) {
     return (
-      <div style={estiloPagina}>
-        <section style={estilos.bloqueio}>
+      <div
+        className="app-page ai-page"
+        style={estiloPagina}
+      >
+        <section
+          className="responsive-panel ai-access-panel"
+          style={estilos.bloqueio}
+        >
           <div style={estilos.iconeBloqueio}>
             ✦
           </div>
@@ -683,8 +695,14 @@ function AnaliseIA() {
     );
   }
     return (
-    <div style={estiloPagina}>
-      <header style={estilos.cabecalho}>
+    <div
+      className="app-page ai-page"
+      style={estiloPagina}
+    >
+      <header
+        className="responsive-page-header"
+        style={estilos.cabecalho}
+      >
         <div>
           <div style={estilos.linhaTitulo}>
             <span style={estilos.seloPremium}>
@@ -709,6 +727,7 @@ function AnaliseIA() {
         </div>
 
         <button
+          className="mobile-full-button"
           type="button"
           onClick={prepararNovaAnalise}
           style={estilos.botaoSecundario}
@@ -730,7 +749,10 @@ function AnaliseIA() {
         </div>
       )}
 
-      <section style={estilos.gradeResumo}>
+      <section
+        className="responsive-grid"
+        style={estilos.gradeResumo}
+      >
         <CartaoResumo
           titulo="Receitas"
           valor={
@@ -783,9 +805,18 @@ function AnaliseIA() {
         />
       </section>
 
-      <div style={estilos.gradePrincipal}>
-        <section style={estilos.painel}>
-          <div style={estilos.cabecalhoPainel}>
+      <div
+        className="responsive-split-grid ai-main-grid"
+        style={estilos.gradePrincipal}
+      >
+        <section
+          className="responsive-panel"
+          style={estilos.painel}
+        >
+          <div
+            className="responsive-panel-header"
+            style={estilos.cabecalhoPainel}
+          >
             <div>
               <span style={estilos.rotulo}>
                 Assistente financeiro
@@ -919,7 +950,10 @@ function AnaliseIA() {
           )}
         </section>
 
-        <aside style={estilos.painelHistorico}>
+        <aside
+          className="responsive-panel"
+          style={estilos.painelHistorico}
+        >
           <div style={estilos.cabecalhoHistorico}>
             <div>
               <span style={estilos.rotulo}>
@@ -1038,8 +1072,14 @@ function AnaliseIA() {
         </aside>
       </div>
 
-      <section style={estilos.painelResposta}>
-        <div style={estilos.cabecalhoResposta}>
+      <section
+        className="responsive-panel"
+        style={estilos.painelResposta}
+      >
+        <div
+          className="responsive-panel-header"
+          style={estilos.cabecalhoResposta}
+        >
           <div>
             <span style={estilos.rotulo}>
               Resultado

@@ -118,6 +118,7 @@ function Chart({
   }) {
         return (
       <section
+        className="responsive-panel chart-panel"
         style={{
           background: cores.painel,
           borderRadius: 18,
@@ -256,6 +257,7 @@ function Chart({
       }}
     >
       <div
+        className="responsive-grid chart-grid"
         style={{
           display: "grid",
           gridTemplateColumns:

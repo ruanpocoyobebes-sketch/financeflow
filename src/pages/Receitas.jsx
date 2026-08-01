@@ -684,7 +684,10 @@ function Receitas() {
   };
 
   return (
-    <div style={ui.page(cores)}>
+    <div
+      className="app-page"
+      style={ui.page(cores)}
+    >
       <header style={estilos.cabecalho}>
         <div>
           <h1 style={ui.title(cores)}>Receitas</h1>
@@ -696,7 +699,10 @@ function Receitas() {
         </div>
       </header>
 
-      <section style={estilos.gradeCards}>
+      <section
+        className="responsive-grid"
+        style={estilos.gradeCards}
+      >
         <article style={estilos.cardDestaque}>
           <div style={estilos.cardTopo}>
             <span style={estilos.cardLabel}>Total recebido</span>
@@ -764,7 +770,10 @@ function Receitas() {
         </article>
       </section>
 
-      <section style={estilos.gradeInformacoes}>
+      <section
+        className="responsive-grid"
+        style={estilos.gradeInformacoes}
+      >
         <article style={estilos.painel}>
           <div style={estilos.painelInterno}>
             <h2 style={estilos.painelTitulo}>
@@ -853,8 +862,14 @@ function Receitas() {
         </article>
       </section>
 
-      <section style={ui.panel(cores)}>
-        <div style={estilos.painelCabecalho}>
+      <section
+        className="responsive-panel"
+        style={ui.panel(cores)}
+      >
+        <div
+          className="responsive-panel-header"
+          style={estilos.painelCabecalho}
+        >
           <div>
             <h2 style={estilos.painelTitulo}>
               Histórico de receitas
@@ -865,7 +880,10 @@ function Receitas() {
             </p>
           </div>
 
-          <div style={estilos.filtros}>
+          <div
+            className="responsive-filters"
+            style={estilos.filtros}
+          >
             <input
               type="text"
               value={busca}
@@ -954,8 +972,14 @@ function Receitas() {
           </div>
         ) : (
           <>
-            <div style={estilos.tabelaContainer}>
-              <table style={estilos.tabela}>
+            <div
+              className="responsive-table-scroll"
+              style={estilos.tabelaContainer}
+            >
+              <table
+                className="responsive-table"
+                style={estilos.tabela}
+              >
                 <thead style={estilos.tabelaCabecalho}>
                   <tr>
                     <th style={estilos.th}>Descrição</th>

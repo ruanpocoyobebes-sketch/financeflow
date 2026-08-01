@@ -1,4 +1,4 @@
-export const page = (cores) => ({
+export const page = () => ({
   width: "100%",
   display: "flex",
   flexDirection: "column",

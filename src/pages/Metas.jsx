@@ -870,8 +870,14 @@ function Metas() {
   };
 
   return (
-    <div style={estilos.pagina}>
-      <header style={estilos.cabecalho}>
+    <div
+      className="app-page"
+      style={estilos.pagina}
+    >
+      <header
+        className="responsive-page-header"
+        style={estilos.cabecalho}
+      >
         <div>
           <h1 style={estilos.titulo}>Metas financeiras</h1>
 
@@ -882,6 +888,7 @@ function Metas() {
         </div>
 
         <button
+          className="mobile-full-button"
           type="button"
           onClick={() => {
             setFormularioAberto((estadoAtual) => !estadoAtual);
@@ -893,7 +900,10 @@ function Metas() {
         </button>
       </header>
 
-      <section style={estilos.gradeCards}>
+      <section
+        className="responsive-grid"
+        style={estilos.gradeCards}
+      >
         <article style={estilos.cardDestaque}>
           <div style={estilos.cardTopo}>
             <span style={estilos.cardLabel}>Total guardado</span>
@@ -949,7 +959,10 @@ function Metas() {
         </article>
       </section>
 
-      <section style={estilos.painel}>
+      <section
+        className="responsive-panel"
+        style={estilos.painel}
+      >
         <div style={estilos.resumoGeral}>
           <div style={estilos.resumoTopo}>
             <span style={estilos.resumoTexto}>
@@ -968,8 +981,14 @@ function Metas() {
       </section>
 
       {formularioAberto && (
-        <section style={estilos.painel}>
-          <div style={estilos.painelCabecalho}>
+        <section
+          className="responsive-panel"
+          style={estilos.painel}
+        >
+          <div
+            className="responsive-panel-header"
+            style={estilos.painelCabecalho}
+          >
             <div>
               <h2 style={estilos.painelTitulo}>Criar nova meta</h2>
 
@@ -980,7 +999,10 @@ function Metas() {
           </div>
 
           <form onSubmit={criarMeta} style={estilos.formulario}>
-            <div style={estilos.gradeFormulario}>
+            <div
+              className="responsive-grid"
+              style={estilos.gradeFormulario}
+            >
               <div style={estilos.campoGrupo}>
                 <label style={estilos.label}>Nome da meta</label>
 
@@ -1068,8 +1090,14 @@ function Metas() {
         </section>
       )}
 
-      <section style={estilos.painel}>
-        <div style={estilos.painelCabecalho}>
+      <section
+        className="responsive-panel"
+        style={estilos.painel}
+      >
+        <div
+          className="responsive-panel-header"
+          style={estilos.painelCabecalho}
+        >
           <div>
             <h2 style={estilos.painelTitulo}>Seus objetivos</h2>
 
@@ -1078,7 +1106,10 @@ function Metas() {
             </p>
           </div>
 
-          <div style={estilos.filtros}>
+          <div
+            className="responsive-filters"
+            style={estilos.filtros}
+          >
             <input
               type="text"
               placeholder="Buscar meta..."
@@ -1154,7 +1185,10 @@ function Metas() {
             </p>
           </div>
         ) : (
-          <div style={estilos.gradeMetas}>
+          <div
+            className="responsive-grid responsive-card-list"
+            style={estilos.gradeMetas}
+          >
             {metasFiltradas.map((meta) => {
               const status = obterStatus(meta);
 
@@ -1228,7 +1262,10 @@ function Metas() {
                       : "Objetivo financeiro alcançado"}
                   </p>
 
-                  <div style={estilos.acoesMeta}>
+                  <div
+                    className="mobile-action-row"
+                    style={estilos.acoesMeta}
+                  >
                     <button
                       type="button"
                       onClick={() => adicionarValor(meta.id)}

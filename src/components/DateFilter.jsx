@@ -6,6 +6,7 @@ function DateFilter({
 }) {
   return (
     <div
+      className="responsive-filters date-filter"
       style={{
         display: "flex",
         gap: 20,
@@ -14,7 +15,7 @@ function DateFilter({
         flexWrap: "wrap",
       }}
     >
-      <div>
+      <div className="date-filter-field">
         <label
           style={{
             color: "var(--text-primary, #ffffff)",
@@ -35,7 +36,7 @@ function DateFilter({
         />
       </div>
 
-      <div>
+      <div className="date-filter-field">
         <label
           style={{
             color: "var(--text-primary, #ffffff)",

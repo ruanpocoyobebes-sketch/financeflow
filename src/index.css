@@ -31,6 +31,11 @@ body,
     color 0.25s ease;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html[data-theme="dark"] {
   color-scheme: dark;
 }
@@ -43,6 +48,7 @@ body {
   font-family: Inter, system-ui, Arial, sans-serif;
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
+  overflow-x: hidden;
 }
 
 #root {
@@ -54,6 +60,348 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+.app-shell,
+.app-main,
+.app-page {
+  width: 100%;
+  min-width: 0;
+}
+
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.responsive-table-scroll,
+.transaction-list {
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.responsive-table th,
+.responsive-table td {
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .responsive-split-grid,
+  .report-chart-grid,
+  .chart-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    display: block !important;
+  }
+
+  .app-main {
+    width: 100% !important;
+    padding: 18px 14px
+      calc(92px + env(safe-area-inset-bottom)) !important;
+    overflow: visible !important;
+  }
+
+  .app-sidebar {
+    position: fixed !important;
+    inset: auto 0 0 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: calc(72px + env(safe-area-inset-bottom)) !important;
+    padding: 7px 8px env(safe-area-inset-bottom) !important;
+    border-top: 1px solid var(--border-color, #334155) !important;
+    border-right: 0 !important;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.24) !important;
+    overflow: hidden !important;
+    z-index: 1000 !important;
+  }
+
+  .app-sidebar-brand,
+  .app-sidebar-summary,
+  .app-sidebar-footer,
+  .app-sidebar-premium,
+  .app-sidebar-link-value {
+    display: none !important;
+  }
+
+  .app-sidebar-nav {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+
+  .app-sidebar-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .app-sidebar-link {
+    flex: 0 0 68px !important;
+    width: 68px !important;
+    min-width: 68px !important;
+    min-height: 56px !important;
+    padding: 7px 5px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    border-radius: 12px !important;
+    scroll-snap-align: center;
+  }
+
+  .app-sidebar-link-icon {
+    width: 20px !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    font-size: 17px !important;
+    transform: none !important;
+  }
+
+  .app-sidebar-link-copy {
+    width: auto !important;
+    max-width: 62px !important;
+    flex: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: none !important;
+    text-align: center;
+  }
+
+  .app-sidebar-link-copy > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 10px !important;
+    line-height: 1.15;
+  }
+
+  .app-page h1 {
+    font-size: clamp(26px, 8vw, 30px) !important;
+    overflow-wrap: anywhere;
+  }
+
+  .app-page h2,
+  .app-page h3,
+  .app-page p,
+  .app-page strong {
+    overflow-wrap: anywhere;
+  }
+
+  .app-page input,
+  .app-page select,
+  .app-page textarea {
+    max-width: 100%;
+    font-size: 16px !important;
+  }
+
+  .app-page button {
+    min-height: 44px;
+  }
+
+  .responsive-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .responsive-page-header {
+    width: 100%;
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  .responsive-panel {
+    min-width: 0 !important;
+  }
+
+  .responsive-panel-header {
+    align-items: stretch !important;
+    flex-direction: column !important;
+    padding: 16px !important;
+  }
+
+  .responsive-filters {
+    width: 100% !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .responsive-filters > *,
+  .responsive-filters input,
+  .responsive-filters select,
+  .responsive-filters textarea {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    box-sizing: border-box;
+  }
+
+  .responsive-card-list {
+    padding: 14px !important;
+  }
+
+  .mobile-full-button {
+    width: 100% !important;
+  }
+
+  .mobile-action-row {
+    flex-direction: column !important;
+  }
+
+  .mobile-action-row > button {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .dashboard-navbar {
+    padding: 16px !important;
+    gap: 14px !important;
+  }
+
+  .dashboard-navbar-actions,
+  .dashboard-navbar-profile {
+    width: 100% !important;
+  }
+
+  .dashboard-navbar-shortcut {
+    display: none !important;
+  }
+
+  .dashboard-navbar-profile {
+    justify-content: flex-start !important;
+  }
+
+  .dashboard-welcome > div:first-child {
+    align-items: flex-start !important;
+  }
+
+  .date-filter {
+    margin-bottom: 20px !important;
+  }
+
+  .finance-summary-card,
+  .chart-panel,
+  .transaction-list {
+    padding: 17px !important;
+  }
+
+  .finance-modal-overlay {
+    align-items: flex-start !important;
+    padding: 14px !important;
+    overflow-y: auto !important;
+  }
+
+  .finance-modal-card {
+    max-height: calc(100dvh - 28px);
+    margin: auto;
+    padding: 22px 18px !important;
+    border-radius: 18px !important;
+    overflow-y: auto;
+  }
+
+  .finance-modal-card h2 {
+    font-size: 26px !important;
+  }
+
+  .finance-modal-card input,
+  .finance-modal-card select {
+    font-size: 16px !important;
+  }
+
+  .finance-modal-actions {
+    flex-direction: column !important;
+  }
+
+  .finance-modal-actions button {
+    width: 100%;
+    flex: none !important;
+  }
+
+  .report-chart-panel {
+    overflow-x: auto !important;
+  }
+
+  .report-bar-chart {
+    min-width: 560px;
+  }
+
+  .settings-account-row {
+    flex-wrap: wrap !important;
+  }
+
+  .settings-option {
+    align-items: flex-start !important;
+  }
+
+  .ai-access-panel {
+    margin: 28px auto !important;
+    padding: 28px 20px !important;
+  }
+
+  .auth-page {
+    min-height: 100dvh !important;
+    padding: 14px !important;
+    align-items: flex-start !important;
+  }
+
+  .auth-card {
+    margin: auto 0;
+    padding: 28px 20px !important;
+    border-radius: 18px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .app-main {
+    padding-inline: 10px !important;
+  }
+
+  .dashboard-navbar-profile {
+    padding-inline: 10px !important;
+  }
+
+  .finance-modal-overlay {
+    padding: 8px !important;
+  }
+
+  .finance-modal-card {
+    max-height: calc(100dvh - 16px);
+  }
+}
+
+@media (hover: none) {
+  .finance-summary-card {
+    transform: none !important;
+  }
+}
+
+@media print {
+  .app-sidebar {
+    display: none !important;
+  }
+
+  .app-main {
+    padding: 0 !important;
+  }
+
+  .app-page {
+    padding-bottom: 0 !important;
+  }
 }
 
 .menu-item {

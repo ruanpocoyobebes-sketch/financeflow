@@ -273,10 +273,14 @@ function Dashboard() {
   const insights = criarInsights();
 
   return (
-    <div style={{ color: cores.texto }}>
+    <div
+      className="app-page dashboard-page"
+      style={{ color: cores.texto }}
+    >
       <Navbar />
 
       <div
+        className="responsive-page-header dashboard-welcome"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -351,6 +355,8 @@ function Dashboard() {
         </div>
 
         <button
+          className="mobile-full-button"
+          type="button"
           onClick={abrirNovaTransacao}
           style={{
             background: "#22C55E",
@@ -377,6 +383,7 @@ function Dashboard() {
       />
 
       <div
+        className="responsive-grid dashboard-summary-grid"
         style={{
           display: "grid",
           gridTemplateColumns:
@@ -415,6 +422,7 @@ function Dashboard() {
         />
       </div>
             <section
+        className="responsive-panel"
         style={{
           marginTop: 30,
           background: cores.painel,
@@ -425,6 +433,7 @@ function Dashboard() {
         }}
       >
         <div
+          className="responsive-panel-header"
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -470,6 +479,7 @@ function Dashboard() {
         </div>
 
         <div
+          className="responsive-grid dashboard-insights-grid"
           style={{
             display: "grid",
             gridTemplateColumns:
@@ -536,6 +546,7 @@ function Dashboard() {
 
       {metas.length > 0 && (
         <section
+          className="responsive-panel"
           style={{
             marginTop: 30,
             background: cores.painel,
@@ -546,6 +557,7 @@ function Dashboard() {
           }}
         >
           <div
+            className="responsive-panel-header"
             style={{
               display: "flex",
               justifyContent: "space-between",
