@@ -427,3 +427,410 @@ textarea {
   background: var(--panel-bg);
   color: var(--text-primary);
 }
+
+.dashboard-primary-actions {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.receipt-scanner-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.receipt-scanner-button:hover,
+.receipt-scanner-submit:hover,
+.receipt-scanner-secondary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.receipt-scanner-button:focus-visible,
+.receipt-scanner-submit:focus-visible,
+.receipt-scanner-secondary:focus-visible,
+.receipt-scanner-close:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.45);
+  outline-offset: 2px;
+}
+
+.receipt-scanner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(2, 6, 23, 0.82);
+  backdrop-filter: blur(12px);
+}
+
+.receipt-scanner-modal {
+  width: min(960px, 100%);
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  border-radius: 22px;
+}
+
+.receipt-scanner-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 26px 18px;
+  background: inherit;
+  border-radius: 22px 22px 0 0;
+}
+
+.receipt-scanner-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.receipt-scanner-heading h2 {
+  margin: 0;
+  font-size: 25px;
+}
+
+.receipt-scanner-heading p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.receipt-scanner-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  font-size: 21px;
+}
+
+.receipt-scanner-close {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.receipt-scanner-content {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 26px;
+  padding: 8px 26px 26px;
+}
+
+.receipt-scanner-preview-column,
+.receipt-scanner-form {
+  min-width: 0;
+}
+
+.receipt-scanner-preview {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 310px;
+  max-height: 480px;
+  overflow: hidden;
+  border: 1px solid;
+  border-radius: 16px;
+  color: #64748b;
+  font-size: 52px;
+}
+
+.receipt-scanner-preview > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 480px;
+  object-fit: contain;
+}
+
+.receipt-scanner-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: #fff;
+  background: rgba(2, 6, 23, 0.78);
+  text-align: center;
+  font-size: 14px;
+}
+
+.receipt-scanner-spinner {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 5px;
+  border: 4px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #60a5fa;
+  border-radius: 50%;
+  animation: receipt-scanner-spin 0.8s linear infinite;
+}
+
+.receipt-scanner-progress {
+  width: 100%;
+  height: 8px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.receipt-scanner-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  transition: width 0.25s ease;
+}
+
+.receipt-scanner-secondary,
+.receipt-scanner-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 46px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+}
+
+.receipt-scanner-secondary {
+  margin-top: 14px;
+  border: 1px solid;
+}
+
+.receipt-scanner-submit {
+  margin-top: 24px;
+  padding: 13px 18px;
+  border: 0;
+  color: #fff;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  box-shadow: 0 10px 22px rgba(34, 197, 94, 0.2);
+}
+
+.receipt-scanner-secondary:disabled,
+.receipt-scanner-submit:disabled {
+  opacity: 0.55;
+  cursor: wait;
+  transform: none;
+}
+
+.receipt-scanner-tip,
+.receipt-scanner-privacy {
+  margin: 12px 2px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.receipt-scanner-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.receipt-scanner-form > label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.receipt-scanner-form > input,
+.receipt-scanner-form > select,
+.receipt-scanner-money-field {
+  margin-bottom: 18px;
+}
+
+.receipt-scanner-form input:focus,
+.receipt-scanner-form select:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
+}
+
+.receipt-scanner-money-field {
+  position: relative;
+}
+
+.receipt-scanner-money-field > span {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  z-index: 1;
+  transform: translateY(-50%);
+  color: #22c55e;
+  font-weight: 800;
+}
+
+.receipt-scanner-review {
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: #b45309;
+  background: #fef3c7;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.receipt-scanner-warning {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border: 1px solid rgba(245, 158, 11, 0.42);
+  border-radius: 12px;
+  color: #92400e;
+  background: #fef3c7;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.receipt-scanner-details {
+  margin-top: 2px;
+  border: 1px solid;
+  border-radius: 12px;
+}
+
+.receipt-scanner-details summary {
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.receipt-scanner-details pre {
+  max-height: 160px;
+  margin: 0 10px 10px;
+  padding: 12px;
+  overflow: auto;
+  border-radius: 9px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.receipt-scanner-toast {
+  position: fixed;
+  top: max(20px, env(safe-area-inset-top));
+  left: 50%;
+  z-index: 10040;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(440px, calc(100% - 28px));
+  padding: 14px 16px;
+  border: 1px solid rgba(34, 197, 94, 0.42);
+  border-radius: 14px;
+  color: #14532d;
+  background: #dcfce7;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@keyframes receipt-scanner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-primary-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .receipt-scanner-overlay {
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .receipt-scanner-modal {
+    max-height: calc(100dvh - 20px);
+    border-radius: 18px;
+  }
+
+  .receipt-scanner-header {
+    padding: 18px 16px 14px;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .receipt-scanner-heading {
+    align-items: flex-start;
+  }
+
+  .receipt-scanner-heading h2 {
+    font-size: 21px !important;
+  }
+
+  .receipt-scanner-heading p {
+    font-size: 13px;
+  }
+
+  .receipt-scanner-icon {
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .receipt-scanner-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    padding: 6px 16px 20px;
+  }
+
+  .receipt-scanner-preview {
+    min-height: 240px;
+    max-height: 320px;
+  }
+
+  .receipt-scanner-preview > img {
+    max-height: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt-scanner-button,
+  .receipt-scanner-submit,
+  .receipt-scanner-secondary,
+  .receipt-scanner-progress > span {
+    transition: none;
+  }
+}
