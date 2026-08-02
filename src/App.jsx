@@ -8,6 +8,7 @@ import {
 
 import Sidebar from "./components/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import OwnerRoute from "./components/OwnerRoute";
 
 import Apresentacao from "./pages/Apresentacao";
 import Cadastro from "./pages/Cadastro";
@@ -21,6 +22,7 @@ import Metas from "./pages/Metas";
 import Relatorios from "./pages/Relatorios";
 import Configuracoes from "./pages/Configuracoes";
 import AnaliseIA from "./pages/AnaliseIA";
+import Admin from "./pages/Admin";
 
 function AppLayout({ children }) {
   return (
@@ -135,6 +137,17 @@ function App() {
         element={
           <RotaProtegida>
             <Configuracoes />
+          </RotaProtegida>
+        }
+      />
+
+      <Route
+        path="/app/admin"
+        element={
+          <RotaProtegida>
+            <OwnerRoute>
+              <Admin />
+            </OwnerRoute>
           </RotaProtegida>
         }
       />
