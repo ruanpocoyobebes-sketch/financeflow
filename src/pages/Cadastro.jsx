@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Link,
   useLocation,
   useNavigate,
 } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { adminService } from "../services/admin";
 
 function Cadastro() {
   const navigate = useNavigate();
@@ -21,12 +22,36 @@ function Cadastro() {
   const [senha, setSenha] = useState("");
 
   const [carregando, setCarregando] = useState(false);
+  const [cadastrosLiberados, setCadastrosLiberados] =
+    useState(null);
+
+  useEffect(() => {
+    let ativo = true;
+
+    adminService.cadastrosEstaoLiberados().then((liberados) => {
+      if (ativo) setCadastrosLiberados(liberados);
+    });
+
+    return () => {
+      ativo = false;
+    };
+  }, []);
 
   async function cadastrar(e) {
     e.preventDefault();
 
     try {
       setCarregando(true);
+
+      const aindaLiberados =
+        await adminService.cadastrosEstaoLiberados();
+
+      if (!aindaLiberados) {
+        setCadastrosLiberados(false);
+        throw new Error(
+          "Novos cadastros estão temporariamente bloqueados pelo administrador."
+        );
+      }
 
       const resultado = await criarConta({
         nome,
@@ -102,44 +127,71 @@ function Cadastro() {
             marginBottom: 30,
           }}
         >
-          Crie sua conta gratuitamente.
+          {cadastrosLiberados === false
+            ? "Novos cadastros estão temporariamente pausados."
+            : "Crie sua conta gratuitamente."}
         </p>
 
-        <input
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          placeholder="Nome"
-          required
-          style={input}
-        />
+        {cadastrosLiberados === false ? (
+          <div
+            style={{
+              marginBottom: 18,
+              padding: 18,
+              border: "1px solid rgba(245, 158, 11, 0.45)",
+              borderRadius: 12,
+              color: "#fbbf24",
+              background: "rgba(245, 158, 11, 0.1)",
+              lineHeight: 1.5,
+              textAlign: "center",
+            }}
+          >
+            🔒 O dono do aplicativo desativou a criação de novas contas.
+            Tente novamente mais tarde.
+          </div>
+        ) : (
+          <>
+            <input
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Nome"
+              required
+              disabled={cadastrosLiberados === null}
+              style={input}
+            />
 
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-          style={input}
-        />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+              disabled={cadastrosLiberados === null}
+              style={input}
+            />
 
-        <input
-          type="password"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          placeholder="Senha"
-          required
-          minLength={6}
-          style={input}
-        />
+            <input
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              placeholder="Senha"
+              required
+              minLength={6}
+              disabled={cadastrosLiberados === null}
+              style={input}
+            />
 
-        <button
-          disabled={carregando}
-          style={botao}
-        >
-          {carregando
-            ? "Criando..."
-            : "Criar conta"}
-        </button>
+            <button
+              disabled={carregando || cadastrosLiberados === null}
+              style={botao}
+            >
+              {cadastrosLiberados === null
+                ? "Verificando..."
+                : carregando
+                  ? "Criando..."
+                  : "Criar conta"}
+            </button>
+          </>
+        )}
 
         <p
           style={{

@@ -28,6 +28,7 @@ async function buscarPerfil() {
         nome,
         avatar_url,
         plano,
+        bloqueado,
         moeda,
         tema,
         created_at
@@ -85,6 +86,7 @@ async function atualizarPerfil({
         nome,
         avatar_url,
         plano,
+        bloqueado,
         moeda,
         tema,
         created_at
@@ -99,20 +101,31 @@ async function atualizarPerfil({
   return data;
 }
 
-function usuarioTemPlanoPremium(perfil) {
+function normalizarPlano(perfil) {
   const plano = String(
     perfil?.plano || ""
   )
     .trim()
     .toLowerCase();
 
-  return plano === "premium";
+  return plano;
+}
+
+function usuarioTemPlanoPremium(perfil) {
+  return ["premium", "dono"].includes(
+    normalizarPlano(perfil)
+  );
+}
+
+function usuarioEhDono(perfil) {
+  return normalizarPlano(perfil) === "dono";
 }
 
 export const perfilService = {
   buscarPerfil,
   atualizarPerfil,
   usuarioTemPlanoPremium,
+  usuarioEhDono,
 };
 
 export default perfilService;

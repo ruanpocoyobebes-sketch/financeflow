@@ -10,10 +10,12 @@ import {
   FaChartPie,
   FaCog,
   FaFileAlt,
+  FaUserShield,
 } from "react-icons/fa";
 
 import { useFinance } from "../context/FinanceContext";
 import { useSettings } from "../context/SettingsContext";
+import { usePerfil } from "../context/PerfilContext";
 
 const menu = [
   {
@@ -61,6 +63,12 @@ const menu = [
     premium: true,
   },
   {
+    nome: "Administração",
+    rota: "/app/admin",
+    icone: <FaUserShield />,
+    dono: true,
+  },
+  {
     nome: "Configurações",
     rota: "/app/configuracoes",
     icone: <FaCog />,
@@ -75,6 +83,12 @@ function Sidebar() {
 
   const { transacoes, metas } = useFinance();
   const { formatarMoeda } = useSettings();
+  const { ehDono } = usePerfil();
+
+  const menuDisponivel = useMemo(
+    () => menu.filter((item) => !item.dono || ehDono),
+    [ehDono]
+  );
 
   const valoresFinanceiros = useMemo(() => {
     const listaTransacoes = Array.isArray(transacoes)
@@ -331,7 +345,7 @@ function Sidebar() {
           paddingRight: expandida ? 2 : 0,
         }}
       >
-        {menu.map((item) => {
+        {menuDisponivel.map((item) => {
           const valorItem = obterValorMenu(
             item.tipoValor
           );
@@ -363,6 +377,8 @@ function Sidebar() {
                 background: isActive
                   ? item.premium
                     ? "linear-gradient(135deg, #a855f7, #7c3aed)"
+                    : item.dono
+                      ? "linear-gradient(135deg, #f59e0b, #d97706)"
                     : "var(--accent, #22c55e)"
                   : "transparent",
                 textDecoration: "none",
@@ -455,6 +471,28 @@ function Sidebar() {
                   }}
                 >
                   Premium
+                </span>
+              )}
+
+              {item.dono && (
+                <span
+                  className="app-sidebar-owner"
+                  style={{
+                    marginLeft: "auto",
+                    display: expandida ? "inline-flex" : "none",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "4px 7px",
+                    borderRadius: "999px",
+                    background: "rgba(245, 158, 11, 0.18)",
+                    color: "#fbbf24",
+                    fontSize: "9px",
+                    fontWeight: 800,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.4px",
+                  }}
+                >
+                  Dono
                 </span>
               )}
             </NavLink>

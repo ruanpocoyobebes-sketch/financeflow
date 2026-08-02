@@ -218,6 +218,7 @@ function AnaliseIA() {
     perfil,
     plano,
     ehPremium,
+    ehDono,
     carregandoPerfil,
     erroPerfil,
   } = usePerfil();
@@ -705,8 +706,18 @@ function AnaliseIA() {
       >
         <div>
           <div style={estilos.linhaTitulo}>
-            <span style={estilos.seloPremium}>
-              Premium
+            <span
+              style={
+                ehDono
+                  ? {
+                      ...estilos.seloPremium,
+                      color: "#fbbf24",
+                      background: "rgba(245, 158, 11, 0.15)",
+                    }
+                  : estilos.seloPremium
+              }
+            >
+              {ehDono ? "Dono" : "Premium"}
             </span>
 
             <span style={estilos.statusIA}>

@@ -115,12 +115,20 @@ export function PerfilProvider({ children }) {
     [perfil]
   );
 
+  const ehDono = useMemo(
+    () => perfilService.usuarioEhDono(perfil),
+    [perfil]
+  );
+
   const plano = perfil?.plano || "free";
+  const bloqueado = Boolean(perfil?.bloqueado);
 
   const valorContexto = {
     perfil,
     plano,
     ehPremium,
+    ehDono,
+    bloqueado,
     carregandoPerfil,
     erroPerfil,
 

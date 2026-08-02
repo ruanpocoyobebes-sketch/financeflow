@@ -59,9 +59,9 @@ async function verificarPlanoPremium() {
     .trim()
     .toLowerCase();
 
-  if (plano !== "premium") {
+  if (!["premium", "dono"].includes(plano)) {
     throw new Error(
-      "A análise com IA está disponível apenas para usuários Premium."
+      "A análise com IA está disponível apenas para usuários Premium ou Dono."
     );
   }
 

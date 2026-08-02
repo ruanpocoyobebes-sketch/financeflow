@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
+import { usePerfil } from "../context/PerfilContext";
 import { useSettings } from "../context/SettingsContext";
 
 function Configuracoes() {
@@ -13,6 +14,7 @@ function Configuracoes() {
     sair,
     atualizarContaConhecida,
   } = useAuth();
+  const { plano, ehDono } = usePerfil();
 
   const {
     settings,
@@ -581,6 +583,32 @@ function Configuracoes() {
               <p style={estilos.textoPequeno}>
                 Perfil principal
               </p>
+
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  margin: "4px 0 7px",
+                  padding: "4px 8px",
+                  borderRadius: 999,
+                  color: ehDono
+                    ? "#fbbf24"
+                    : plano === "premium"
+                      ? "#c084fc"
+                      : cores.textoSecundario,
+                  background: ehDono
+                    ? "rgba(245, 158, 11, 0.15)"
+                    : plano === "premium"
+                      ? "rgba(168, 85, 247, 0.15)"
+                      : "rgba(148, 163, 184, 0.15)",
+                  fontSize: 10,
+                  fontWeight: 800,
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Plano {String(plano || "free")}
+              </span>
 
               {usuario?.email && (
                 <span style={estilos.emailConta}>
